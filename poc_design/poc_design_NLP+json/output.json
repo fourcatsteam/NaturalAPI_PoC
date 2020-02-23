@@ -1,1 +1,24 @@
-{"features":[{"name":"Design module behavior","scenarios":[{"name":"Python - no programming language adapter","operations":[{"name":"generate_api","parameters":[]}]},{"name":"Python - no programming language adapter","operations":[{"name":"confirm_suggestion","parameters":[]}]},{"name":"Python - no programming language adapter","operations":[{"name":"give_api","parameters":[]}]}]}]}
+{
+  "features" : [ {
+    "name" : "Design module behavior",
+    "scenarios" : [ {
+      "name" : "Python - no programming language adapter",
+      "operations" : [ {
+        "name" : "generate_api",
+        "parameters" : [ ]
+      } ]
+    }, {
+      "name" : "Python - no programming language adapter",
+      "operations" : [ {
+        "name" : "confirm_suggestion",
+        "parameters" : [ ]
+      } ]
+    }, {
+      "name" : "Python - no programming language adapter",
+      "operations" : [ {
+        "name" : "give_api",
+        "parameters" : [ ]
+      } ]
+    } ]
+  } ]
+}
