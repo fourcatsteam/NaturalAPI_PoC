@@ -12,6 +12,13 @@ public class Scenario { //HA SENSO LASCIARE LO SCENARIO PER TRASFORMAZIONE IN JS
         lOperations.add(operation);
     }
     
+    public Scenario(List<Operation> operation) {
+        lOperations = new ArrayList<Operation>();
+        for (Operation o : operation) {
+            lOperations.add(o);
+        }
+    }
+    
     public Scenario() {
         lOperations = new ArrayList<Operation>();
     }

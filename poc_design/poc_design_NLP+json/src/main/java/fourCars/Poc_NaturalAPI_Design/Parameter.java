@@ -40,7 +40,7 @@ public class Parameter{
     }
     
     @Override public String toString() {
-        return name;
+        return name; //"name: " + name + ", type: " + type + ", required: " + required + "\n";
     }
     
 }

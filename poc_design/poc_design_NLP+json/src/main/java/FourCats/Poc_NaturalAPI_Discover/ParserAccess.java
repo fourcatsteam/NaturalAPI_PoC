@@ -1,13 +1,16 @@
 package FourCats.Poc_NaturalAPI_Discover;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
-import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
+import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.parser.nndep.DependencyParser;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
@@ -60,8 +63,10 @@ public class ParserAccess implements ParserAccessInterface{
         this.pipeline = new StanfordCoreNLP(props);
     }
 	
-	public Feature parseSentence(String documentContent) { //MODIFICATO PER NATURAL API DESIGN
+	public Feature parseSentence(String documentContent) throws IOException { //MODIFICATO PER NATURAL API DESIGN
 		BlackList blackList = new BlackList();
+		List<Operation> candidatesOperations = new ArrayList<Operation>();
+		String suggestedOp = null;
 		Annotation document = new Annotation(documentContent);
 		// run all Annotators on this text
         this.pipeline.annotate(document);
@@ -72,17 +77,25 @@ public class ParserAccess implements ParserAccessInterface{
         	GrammaticalStructure gramstruct = depparser.predict(sentence);
         	Collection<TypedDependency> dependencies = gramstruct.typedDependencies();
         	for(TypedDependency dep : dependencies) {
+        	    suggestedOp = dep.gov().lemma() + "_" + dep.dep().lemma();
         		//parola principale
-        		if(dep.reln().getShortName().equalsIgnoreCase("dobj") && !blackList.contains(dep.gov().lemma() + "_" + dep.dep().lemma())) {
-        		   Scenario scenario = new Scenario(new Operation(dep.gov().lemma() + "_" + dep.dep().lemma()));
-        		   blackList.addTerm(dep.gov().lemma() + "_" + dep.dep().lemma()); 
-        		   feature.addScenario(scenario);
+        		if(dep.reln().getShortName().equalsIgnoreCase("dobj") && !blackList.contains(suggestedOp)) {
+        		   System.out.println("Do you want to add this to your operations? 1. Yes, 2. NO" );
+        		   BufferedReader reader =
+                           new BufferedReader(new InputStreamReader(System.in));
+        		   String input = reader.readLine();
+        		   if (input.equals("1"))
+        		       candidatesOperations.add(new Operation(suggestedOp));
+        		   blackList.addTerm(suggestedOp); 
         		}
+        		
         		//parola dipendente
         		//System.out.println(dep.dep());
         		//relazione
         		//System.out.println(dep.reln());
         	}
+        	Scenario scenario = new Scenario(candidatesOperations);
+            feature.addScenario(scenario);
             // Iterate over all tokens in a sentence
             /*for (CoreLabel token: sentence.get(TokensAnnotation.class)) {
                 // Retrieve and add the lemma for each word into the

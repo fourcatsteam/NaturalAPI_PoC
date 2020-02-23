@@ -19,47 +19,10 @@ public class Main
 {
     public static void main( String[] args ) throws IOException
     {
-      String doc = null;
-      doc = SupportModule.loadFile("txt_documents\\prova.feature");
-      
-    //Separa il contenuto del document quando trova un "."
-      String[] sentences = doc.split("\\.");
-      
-      //Esegue la lemmatization del documento e lo stampa
-      LemmatizerAccessInterface lemmatizer = new LemmatizerAccess();
-      LemmatizerData result = lemmatizer.lemmatizeSentence(doc);
-      
-      ParserAccessInterface depparser = new ParserAccess();
-      Feature feature = depparser.parseSentence(doc);
-      feature.setName(SupportModule.getFeatureNameFromGherkin(doc));
- 
-      //assigns name to scenarios
-      for(Scenario s: feature.getScenarios()) {
-          s.setName(SupportModule.getScenarioNameFromGherkin(doc));
-      }
-      
-     
-         
-      System.out.println("Candidate operations for the Feature '" + SupportModule.getFeatureNameFromGherkin(doc) + "':" + "\n" + feature.toString());
-      System.out.println("Candidate parameters for operations: \n" + SupportModule.getParametersFromNouns(result) + "\n");
-         
-      
-     
+        
+      Feature feature = SupportModule.loadScenario("txt_documents\\prova.feature");
       BAL bal = new BAL(Arrays.asList(feature));
-    //Creating the ObjectMapper object
-      ObjectMapper mapper = new ObjectMapper();
-      mapper.enable(SerializationFeature.INDENT_OUTPUT);
-      //Converting the Object to JSONString
-      String jsonString;
-      try {
-          jsonString = mapper.writeValueAsString(bal);
-          System.out.println(jsonString);
-          mapper.writeValue(new File("output.json"), bal);
-          System.out.println("\n File json creato!");
-      } catch (JsonProcessingException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-      }
+      SupportModule.createJsonFromBAL(bal, "output.json");
         
     }
 }
