@@ -7,13 +7,25 @@ public class FileAccess implements FileAccessInterface {
 	public String readDocument(String filename) throws FileNotFoundException {
 		String filepath = "txt_documents/" + filename;
 		String s, fileContent = new String();
-		try(BufferedReader input = new BufferedReader(new FileReader(filepath))){
+		try{
+			BufferedReader input = new BufferedReader(new FileReader(filepath));
+			while((s=input.readLine()) != null){
+				fileContent += s;
+			}
+
+			input.close();
+			
+		}catch(IOException e){
+			fileContent="file non trovato";
+		}
+
+		/*try(BufferedReader input = new BufferedReader(new FileReader(filepath))){
 			while((s = input.readLine()) != null) {
-				fileContent += s + " ";
+				fileContent += s;
 			}
 		} catch (IOException e) {
 			fileContent="file non trovato";
-		}
+		}*/
 		return fileContent;
 	}
 }

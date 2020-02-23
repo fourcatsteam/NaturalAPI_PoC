@@ -1,5 +1,6 @@
 package FourCats.Poc_NaturalAPI_Discover;
 
+import java.io.*;
 import java.util.LinkedList;
 
 public class BDL {
@@ -16,11 +17,10 @@ public class BDL {
 	public void addNoun(String noun) {
 		Boolean present = false;
 		for (WordCounter w : nouns) {
-			//controla se le stringhe sono uguali
+			//controlla se le stringhe sono uguali
 			if(w.getWord().equalsIgnoreCase(noun)) {
 				w.incrementCounter();
 				present = true;
-				break;
 			}
 		}
 		if(!present) nouns.add(new WordCounter(noun));
@@ -28,23 +28,92 @@ public class BDL {
 	public void addVerb(String verb) {
 		Boolean present = false;
 		for (WordCounter w : verbs) {
-			//controla se le stringhe sono uguali
+			//controlla se le stringhe sono uguali
 			if(w.getWord().equalsIgnoreCase(verb)) {
 				w.incrementCounter();
 				present = true;
-				break;
 			}
 		}
 		if(!present) verbs.add(new WordCounter(verb));
+		//verbs.add(new WordCounter(verb));
 	}
 	public void addPredicate(String predicate) {
-		predicates.add(new WordCounter(predicate));
+		Boolean present = false;
+		for (WordCounter w : predicates) {
+			//controlla se le stringhe sono uguali
+			if(w.getWord().equalsIgnoreCase(predicate)) {
+				w.incrementCounter();
+				present = true;
+			}
+		}
+		if(!present) predicates.add(new WordCounter(predicate));
+		//predicates.add(new WordCounter(predicate));
 	}
 	
-	public LinkedList<WordCounter> getNouns() {return nouns;}
-	
-	public LinkedList<WordCounter> getVerbs() {return verbs;}
-	
-	public LinkedList<WordCounter> getPredicates() {return predicates;}
+	public LinkedList<WordCounter> getNouns(){
+		return nouns;
+	}
+
+	public void saveToFile() throws FileNotFoundException {
+		saveListToFile(nouns,"Project.nouns.bdl.csv");
+		saveListToFile(verbs,"Project.verbs.bdl.csv");
+		saveListToFile(predicates,"Project.predicates.bdl.csv");
+		//saveNounToFile();
+		//saveVerbsToFile();
+		//savePredicatesToFile();
+	}
+
+	public void useLemmatizerData(LemmatizerData res){
+		for (LemmatizerData.WordTag wtag : res.getList()) {
+			if(wtag.getTag().contains("NN")) {
+				addNoun(wtag.getLemma());
+			}
+			if(wtag.getTag().contains("VB")) {
+				addVerb(wtag.getLemma());
+			}
+		}
+
+		for(String s: res.getPredicate()){
+			addPredicate(s);
+		}
+	}
+
+	private void saveListToFile(LinkedList<WordCounter> list,String namefile) throws FileNotFoundException {
+		PrintWriter writer = new PrintWriter(new File(namefile));
+		StringBuilder sb = new StringBuilder();
+		for(WordCounter w : list) {
+			sb.append(w.getWord());
+			sb.append(",");
+			sb.append(w.getCount());
+			sb.append('\n');
+		}
+		writer.write(sb.toString());
+		writer.close();
+		System.out.println("done!");
+	}
+
+	/*private void saveNounToFile() throws FileNotFoundException{
+
+		PrintWriter writer = new PrintWriter(new File("Project.nouns.bdl.csv"));
+		StringBuilder sb = new StringBuilder();
+		for(WordCounter w : nouns) {
+			sb.append(w.getWord());
+			sb.append(",");
+			sb.append(w.getCount());
+			sb.append('\n');
+		}
+		writer.write(sb.toString());
+		System.out.println("done!");
+
+		/*try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter("bld_noun.txt"));
+			for(WordCounter w : nouns) {
+				writer.write(w.getWord() + " " + w.getCount() + "\n");
+			}
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}*/
 	
 }
