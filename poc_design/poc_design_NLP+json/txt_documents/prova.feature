@@ -1,8 +1,11 @@
-Feature: Design module behavior
-Scenario: Python - no programming language adapter
-Given there is a business application language
-And there is a set of related BDD feature scenarios
-When I generate an API from the business application language
-Then I am asked to confirm each API suggestion (method names, argument types)
-And finally I am given an API in the “Python” language with all suggestions I confirmed
-And finally I am given a test API in the “behave” framework for the given feature scenarios
+Feature: Bank withdraw
+The user is in front of an ATM and he wants to withdraw some cash
+Scenario: Withdraw cash
+Given the user is in front of an ATM
+When the user inserts the card in the ATM
+And the user enters the pin of the card
+And the user enters the amount of cash he wants to withdraw
+Then the ATM should check the pin
+And the ATM should give the user the cash
+But the ATM should not give the user the cash
+

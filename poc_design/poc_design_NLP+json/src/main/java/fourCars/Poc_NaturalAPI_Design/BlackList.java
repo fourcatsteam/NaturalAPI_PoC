@@ -8,7 +8,7 @@ public class BlackList {
     public List<String> blackList; //blacklist that contain unwanted terms (if a term is in this list you probably don't want to use it)
     public BlackList() {
         blackList = new ArrayList<String>();
-        blackList.addAll(Arrays.asList("Feature","Scenario","Given","When", "Then"));
+        blackList.addAll(Arrays.asList("Feature","Scenario","Given","When", "Then", "feature", "scenario", "given", "when","then"));
     }
     public BlackList(List<String> listTerms) {
         blackList = new ArrayList<String>();

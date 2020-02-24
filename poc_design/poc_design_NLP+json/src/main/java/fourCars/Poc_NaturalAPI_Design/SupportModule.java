@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +44,8 @@ public class SupportModule {
         }
         return lParameters;
     }
+    
+    
     
    public static String loadFile(String filename) throws IOException {
        BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -84,7 +87,6 @@ public class SupportModule {
       for(Scenario s: feature.getScenarios()) {
           s.setName(SupportModule.getScenarioNameFromGherkin(doc));
       }
-      
          
       System.out.println("Candidate operations for the Feature '" + SupportModule.getFeatureNameFromGherkin(doc) + "':" + "\n" + feature.toString());
       System.out.println("Candidate parameters for operations: \n" + SupportModule.getParametersFromNouns(result) + "\n");
@@ -108,5 +110,25 @@ public class SupportModule {
              // TODO Auto-generated catch block
              e.printStackTrace();
          }
+   }
+   
+   public static String extractParameterFromOperationName(Operation operation) {
+       int indexFeatureStart = operation.getName().indexOf("_")+1;
+       return operation.getName().substring(indexFeatureStart);
+   }
+   
+   public static void suggestParameter(Operation operation) throws IOException {
+       List<Parameter> candidatesParameters = new ArrayList<Parameter>();
+       String mainCandidateParam = extractParameterFromOperationName(operation);
+       System.out.println("Given the opearation '" + operation.getName() + "'");
+       System.out.println("Would you like to add '" + mainCandidateParam + "' as a parameter? 1. YES, 2. NO\n");
+       BufferedReader reader =
+               new BufferedReader(new InputStreamReader(System.in));
+       String input = reader.readLine();
+       if (input.equals("1")) {
+           candidatesParameters.add(new Parameter(mainCandidateParam));
+           operation.addParameterName(mainCandidateParam);
+       }
+       //blackList.addTerm(suggestedOp); 
    }
 }

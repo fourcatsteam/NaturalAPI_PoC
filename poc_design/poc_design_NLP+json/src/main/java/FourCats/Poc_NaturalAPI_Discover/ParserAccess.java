@@ -25,6 +25,7 @@ import fourCars.Poc_NaturalAPI_Design.BlackList;
 import fourCars.Poc_NaturalAPI_Design.Feature;
 import fourCars.Poc_NaturalAPI_Design.Operation;
 import fourCars.Poc_NaturalAPI_Design.Scenario;
+import fourCars.Poc_NaturalAPI_Design.SupportModule;
 
 public class ParserAccess implements ParserAccessInterface{
 	protected StanfordCoreNLP pipeline;
@@ -43,7 +44,7 @@ public class ParserAccess implements ParserAccessInterface{
         // (required for lemmatization), and lemmatization
         Properties props;
         props = new Properties();
-        props.put("annotators", "tokenize, ssplit, pos, lemma");
+        props.put("annotators", "tokenize, ssplit, pos, lemma"); 
 
         /*
          * This is a pipeline that takes in a string and returns various analyzed linguistic forms. 
@@ -65,12 +66,13 @@ public class ParserAccess implements ParserAccessInterface{
 	
 	public Feature parseSentence(String documentContent) throws IOException { //MODIFICATO PER NATURAL API DESIGN
 		BlackList blackList = new BlackList();
+		Feature feature = new Feature();
 		List<Operation> candidatesOperations = new ArrayList<Operation>();
 		String suggestedOp = null;
+		Operation selectedOperation = null;
 		Annotation document = new Annotation(documentContent);
 		// run all Annotators on this text
         this.pipeline.annotate(document);
-        Feature feature = new Feature("nomeFeature");
         List<CoreMap> sentences = document.get(SentencesAnnotation.class);
         for(CoreMap sentence: sentences) {
          
@@ -79,13 +81,16 @@ public class ParserAccess implements ParserAccessInterface{
         	for(TypedDependency dep : dependencies) {
         	    suggestedOp = dep.gov().lemma() + "_" + dep.dep().lemma();
         		//parola principale
-        		if(dep.reln().getShortName().equalsIgnoreCase("dobj") && !blackList.contains(suggestedOp)) {
-        		   System.out.println("Do you want to add this to your operations? 1. Yes, 2. NO" );
+        		if(dep.reln().getShortName().equalsIgnoreCase("dobj") && !blackList.contains(suggestedOp) && !blackList.contains(dep.dep().lemma())) {
+        		   System.out.println("Would you like to add '" + suggestedOp +  "' to your operations? 1. YES, 2. NO\n" );
         		   BufferedReader reader =
                            new BufferedReader(new InputStreamReader(System.in));
         		   String input = reader.readLine();
-        		   if (input.equals("1"))
-        		       candidatesOperations.add(new Operation(suggestedOp));
+        		   if (input.equals("1")) {
+        		       selectedOperation = new Operation(suggestedOp);
+        		       candidatesOperations.add(selectedOperation);
+        		       SupportModule.suggestParameter(selectedOperation);
+        		   }
         		   blackList.addTerm(suggestedOp); 
         		}
         		
