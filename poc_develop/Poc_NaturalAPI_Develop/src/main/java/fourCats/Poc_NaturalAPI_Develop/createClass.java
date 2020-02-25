@@ -26,12 +26,12 @@ public class createClass {
 	}
 	
 	public void create() {
-		File file = new File("test.java");
 		Scanner scanner = new Scanner(System.in);
 		try {
-			FileWriter fileWriter = new FileWriter(file);
-			fileWriter.write("public class " + name + " {\n\n");
 			for(String method : methods) {
+				File file = new File("./java_classes/" + method +".java");
+				FileWriter fileWriter = new FileWriter(file);
+				fileWriter.write("public class " + method + " {\n\n");
 				ArrayList<String>  parList = parameters.get(method);
 				String par = new String();
 				for(String s : parList) {
@@ -42,9 +42,9 @@ public class createClass {
 				}
 				System.out.println("Inserisci il tipo di ritorno del metodo " + method);
 				fileWriter.write("	public " + scanner.next() + " "+ method + "(" + par + ") {\n\n	}\n");
+				fileWriter.write("\n}");
+				fileWriter.close();
 			}
-			fileWriter.write("\n}");
-			fileWriter.close();
 			scanner.close();
 			System.out.println("Classe java creata!");
 		}
