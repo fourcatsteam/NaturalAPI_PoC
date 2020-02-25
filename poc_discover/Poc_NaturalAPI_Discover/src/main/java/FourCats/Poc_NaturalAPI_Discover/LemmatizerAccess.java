@@ -27,7 +27,7 @@ public class LemmatizerAccess implements LemmatizerAccessInterface {
         // Create StanfordCoreNLP object properties, with POS tagging
         // (required for lemmatization), and lemmatization
         Properties props = new Properties();
-        props.put("annotators", "tokenize, ssplit, pos, lemma,depparse,natlog,openie");
+        props.put("annotators", "tokenize, ssplit, pos, lemma");
 
         /*
          * This is a pipeline that takes in a string and returns various analyzed linguistic forms. 
@@ -54,30 +54,15 @@ public class LemmatizerAccess implements LemmatizerAccessInterface {
         // run all Annotators on this text
         this.pipeline.annotate(document);
         // Iterate over all of the sentences found
-        System.out.println("--------------------------------------------- FRASI -------------------------------------");
         List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
         for(CoreMap sentence: sentences) {
             // Iterate over all tokens in a sentence
-            System.out.println("--------------------------- SemanticGraph --------------------------- ");
-            System.out.println(sentence.get(SemanticGraphCoreAnnotations.EnhancedDependenciesAnnotation.class).toString(SemanticGraph.OutputFormat.LIST));
-            System.out.println("--------------------------- / SemanticGraph / --------------------------- ");
-            Collection<RelationTriple> triples = sentence.get(NaturalLogicAnnotations.RelationTriplesAnnotation.class);
-            System.out.println("--------------triple------------------");
-            for (RelationTriple triple : triples) {
-                System.out.println(triple.confidence + "\t" +
-                        triple.subjectGloss() + "\t" + " - " +
-                        triple.relationGloss() + "\t" + " - " +
-                        triple.objectGloss());
-                data.addPredicate(triple.relationGloss());
-            }
-            System.out.println("-------------- / triple / ------------------");
-
             for (CoreLabel token: sentence.get(TokensAnnotation.class)) {
                 // Retrieve and add the lemma for each word into the
                 // list of lemmas
             	data.addElement(token.value(),token.tag(),token.getString(LemmaAnnotation.class));
             }
-            System.out.println(sentence + "\n");
+            //System.out.println(sentence + "\n");
         }
         return data;
     }

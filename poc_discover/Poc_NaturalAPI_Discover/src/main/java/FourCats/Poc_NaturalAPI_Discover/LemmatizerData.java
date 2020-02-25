@@ -21,20 +21,19 @@ public class LemmatizerData {
 	}
 
 	private List<WordTag> lemmatizationResult;
-	private List<String> predicateResult;
+
 	
 	public LemmatizerData() {
 		lemmatizationResult = new LinkedList<WordTag>();
-		predicateResult = new LinkedList<String>();
 	}
 	
 	public void addElement(String word, String tag, String lemma) {
 		lemmatizationResult.add(new WordTag(word,tag,lemma));
 	}
-	public void addPredicate(String p){ predicateResult.add(p);}
+
 	
 	public List<WordTag> getList() {
 		return lemmatizationResult;
 	};
-	public List<String> getPredicate(){ return predicateResult; }
+
 }
