@@ -30,25 +30,28 @@ public class App
     	FileAccessInterface file = new FileAccess();
     	String documento1 = "atm.txt";
     	Document doc = new Document("prova","Io", 2020,file.readDocument(documento1),"it");
-    	
-        System.out.println(doc.getContent());
-        
+        //System.out.println("---------------------- CONTENUTO DEL DOCUMENTO ----------------------" );
+        //System.out.println(doc.getContent());
         //Separa il contenuto del document quando trova un "."
+
         //String[] sentences = doc.getContent().split("\\.");
         
         //Esegue la lemmatization del documento e lo stampa
         LemmatizerAccessInterface lemmatizer = new LemmatizerAccess();
         LemmatizerData result = lemmatizer.lemmatizeSentence(doc.getContent());
-        for (LemmatizerData.WordTag wtag : result.getList()) {
+        /*for (LemmatizerData.WordTag wtag : result.getList()) {
         	System.out.println(wtag.getValue() + " " + wtag.getTag() + " " + wtag.getLemma());
-        }
+        }*/
+
+        ParserAccessInterface depparser = new ParserAccess();
+        ParserData data = depparser.parseSentence(doc.getContent());
 
         System.out.println("---------------------- GENERAZIONE BDL ----------------------" );
-
         BDL bdl = new BDL();
         bdl.useLemmatizerData(result); //Crea dipendenza?
+        bdl.useParseData(data);
         bdl.saveToFile();
-
+        System.out.println("BDL generata correttamente");
 
         /*LinkedList<WordCounter> nouns = bdl.getNouns();
         for(WordCounter w : nouns) {
