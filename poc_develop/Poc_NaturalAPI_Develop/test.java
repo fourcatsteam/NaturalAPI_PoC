@@ -1,18 +1,18 @@
 public class WithdrawCash {
 
-	public int withdraw_cash() {
+	public int withdraw_cash(Object cash) {
 
 	}
-	public void enter_pin() {
+	public int enter_pin(Object pin) {
 
 	}
-	public void enter_amount() {
+	public int enter_amount(Object amount) {
 
 	}
-	public bool check_pin() {
+	public int check_pin(Object pin) {
 
 	}
-	public int give_cash() {
+	public int give_cash(Object cash) {
 
 	}
 

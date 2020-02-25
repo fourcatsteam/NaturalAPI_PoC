@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -16,6 +18,7 @@ public class jsonToJava {
 	private String feature;
 	private String scenario;
 	private List<String> operations;
+	Map<String,ArrayList<String>> operationParameters;
 	
 	jsonToJava(){
 		JSONParser parser = new JSONParser();
@@ -40,10 +43,23 @@ public class jsonToJava {
 	        
 	        results = (JSONArray) resultObject.get("operations");
 	        operations = new ArrayList<String>();
+	        operationParameters = new HashMap<String,ArrayList<String>>();
 	        for(Object result : results) {
 	        	JSONObject jo = (JSONObject) result;
 	        	String operation = (String) jo.get("name").toString();
 	        	operations.add(operation);
+	        	ArrayList<String> parameters = new ArrayList<String>();
+	        	JSONArray par = (JSONArray) jo.get("parameters");
+	        	for(Object p : par) {
+	        		JSONObject jp = (JSONObject) p;
+	        		String name = (String) jp.get("name");
+	        		String type = (String) jp.get("type");
+	        		if(type == null) {
+	        			type = "Object";
+	        		}
+	        		parameters.add(type + " " + name);
+	        	}
+	        	operationParameters.put(operation, parameters);
 	        }
 	        
 		} catch (FileNotFoundException e) {
@@ -75,5 +91,11 @@ public class jsonToJava {
 	}
 	public void setOperations(List<String> operations) {
 		this.operations = operations;
+	}
+	public Map<String,ArrayList<String>> getOperationParameters() {
+		return operationParameters;
+	}
+	public void setOperationParameters(Map<String,ArrayList<String>> operationParameters) {
+		this.operationParameters = operationParameters;
 	}
 }
