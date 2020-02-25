@@ -6,14 +6,26 @@ import java.util.List;
 public class Operation {
     private String name;
     private List<Parameter> param;
+    private String type;
     
     public Operation() {
         this.name = null;
         this.param = new ArrayList<Parameter>();
+        this.type = null;
     }
     public Operation(String operationName) {
         this.name = operationName;
         this.param = new ArrayList<Parameter>();
+        this.type = null;
+    }
+    
+    public Operation(String operationName, String operationType) {
+        this.name = operationName;
+        this.param = new ArrayList<Parameter>();
+        if(operationType.equals(""))
+            this.type = null;
+         else
+            this.type = operationType;
     }
     
     public void setName(String operationName) {
@@ -30,6 +42,9 @@ public class Operation {
         this.param.add(par);
     }
     
+    public void addParameter(Parameter parameter) {
+        this.param.add(parameter);
+    }
     public void updateParameterName(String paramName, String newName) {
         for (Parameter p : param) {
             if (p.getName()==paramName) {
@@ -59,6 +74,14 @@ public class Operation {
     
     public List<Parameter> getParameters() {
         return param;
+    }
+    
+    public void setType(String operationType) {
+        this.type = operationType;
+    }
+    
+    public String getType() {
+        return type;
     }
     
     @Override

@@ -1,5 +1,4 @@
 Feature: Bank withdraw
-The user is in front of an ATM and he wants to withdraw some cash
 Scenario: Withdraw cash
 Given the user is in front of an ATM
 When the user inserts the card in the ATM

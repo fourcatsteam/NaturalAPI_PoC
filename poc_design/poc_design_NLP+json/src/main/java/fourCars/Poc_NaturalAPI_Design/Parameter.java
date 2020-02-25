@@ -13,6 +13,14 @@ public class Parameter{
     
     public Parameter(String paramName) {
         this.name = paramName;
+        this.type = null;
+        this.required = true;
+    }
+    
+    public Parameter(String paramName, String paramType) {
+        this.name = paramName;
+        this.type = paramType;
+        this.required = true;
     }
 
     public void setName(String paramName) {

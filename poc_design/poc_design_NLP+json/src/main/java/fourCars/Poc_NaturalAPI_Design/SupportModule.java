@@ -32,6 +32,7 @@ public class SupportModule {
         int indexFeatureEnd = gherkinString.indexOf("Given")-1;
         return gherkinString.substring(indexFeatureStart,indexFeatureEnd);
     }
+   
     
     public static List<Parameter> getParametersFromNouns(LemmatizerData lemData) {
         BlackList blackList = new BlackList();
@@ -120,14 +121,18 @@ public class SupportModule {
    public static void suggestParameter(Operation operation) throws IOException {
        List<Parameter> candidatesParameters = new ArrayList<Parameter>();
        String mainCandidateParam = extractParameterFromOperationName(operation);
-       System.out.println("Given the opearation '" + operation.getName() + "'");
+       System.out.println("--------------------------------------PARAMETER SUGGESTION FOR '" + operation.getName() + "'--------------------------------------");
        System.out.println("Would you like to add '" + mainCandidateParam + "' as a parameter? 1. YES, 2. NO\n");
        BufferedReader reader =
                new BufferedReader(new InputStreamReader(System.in));
        String input = reader.readLine();
        if (input.equals("1")) {
-           candidatesParameters.add(new Parameter(mainCandidateParam));
-           operation.addParameterName(mainCandidateParam);
+           System.out.println("Please, insert the type for the parameter '" + mainCandidateParam +  "': (void, string, int, bool, double, float...)" );
+           System.out.println("Otherwise, press the enter key.\n" );
+           input = reader.readLine(); //param type
+           candidatesParameters.add(new Parameter(mainCandidateParam, input));
+           for (Parameter p : candidatesParameters)
+               operation.addParameter(p);
        }
        //blackList.addTerm(suggestedOp); 
    }
