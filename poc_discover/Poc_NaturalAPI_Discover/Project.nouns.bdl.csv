@@ -1,4 +1,4 @@
-atm,17
+atm,18
 bank,9
 network,3
 way,4
@@ -6,8 +6,7 @@ processing,3
 fee,3
 website,1
 child,1
-car,1
-cars.insert,1
+car,2
 card,6
 face,1
 diagram,1
@@ -44,7 +43,7 @@ receipt,5
 idea,1
 wallet,1
 chance,1
-checkbook.take,1
+checkbook,2
 business,1
 hour,1
 problem,1
@@ -54,7 +53,6 @@ transfer,1
 deposit,1
 feature,1
 walk,1
-checkbook,1
 track,1
 tax,1
 purpose,1
@@ -69,7 +67,7 @@ person,1
 keypad,1
 camera,1
 thief,1
-atm.use,1
+use,1
 video,1
 surveillance,1
 area,1

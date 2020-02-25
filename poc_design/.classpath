@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="poc_design_NLP+json/src/main/java"/>
+	<classpathentry kind="src" path="poc_design_NLP+json/src/test/java"/>
+	<classpathentry kind="src" path="Poc_NaturalAPI_Design/src/main/java"/>
+	<classpathentry kind="src" path="Poc_NaturalAPI_Design/src/test/java"/>
+	<classpathentry kind="output" path="Poc_NaturalAPI_Design/target/classes"/>
+</classpath>

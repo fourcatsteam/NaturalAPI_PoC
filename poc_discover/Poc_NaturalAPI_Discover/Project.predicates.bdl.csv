@@ -2,6 +2,7 @@ pay fee,1
 incur fee,1
 have child,1
 use ATM,1
+insert ATM,1
 show you,1
 insert card,1
 accept card,1
@@ -32,6 +33,7 @@ request receipt,1
 put it,1
 have chance,1
 record transaction,1
+take cash,1
 count cash,1
 receive amount,1
 correct problem,1

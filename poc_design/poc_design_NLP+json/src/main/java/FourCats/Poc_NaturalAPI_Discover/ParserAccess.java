@@ -78,16 +78,20 @@ public class ParserAccess implements ParserAccessInterface{
          
         	GrammaticalStructure gramstruct = depparser.predict(sentence);
         	Collection<TypedDependency> dependencies = gramstruct.typedDependencies();
+        	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String input = null;
         	for(TypedDependency dep : dependencies) {
         	    suggestedOp = dep.gov().lemma() + "_" + dep.dep().lemma();
         		//parola principale
         		if(dep.reln().getShortName().equalsIgnoreCase("dobj") && !blackList.contains(suggestedOp) && !blackList.contains(dep.dep().lemma())) {
+        		   System.out.println("--------------------------------------------NEW OPERATION SUGGESTION--------------------------------------------" );
         		   System.out.println("Would you like to add '" + suggestedOp +  "' to your operations? 1. YES, 2. NO\n" );
-        		   BufferedReader reader =
-                           new BufferedReader(new InputStreamReader(System.in));
-        		   String input = reader.readLine();
+        		   input = reader.readLine();
         		   if (input.equals("1")) {
-        		       selectedOperation = new Operation(suggestedOp);
+        		       System.out.println("Please, insert the return type for the opeartion '" + suggestedOp +  "': (void, string, int, bool, double, float...)" );
+        		       System.out.println("Otherwise, press the enter key.\n" );
+        		       input = reader.readLine(); //input for the type
+        		       selectedOperation = new Operation(suggestedOp,input);
         		       candidatesOperations.add(selectedOperation);
         		       SupportModule.suggestParameter(selectedOperation);
         		   }

@@ -1,41 +1,39 @@
 {
   "features" : [ {
-    "name" : "Bank withdraw\nThe user is in front of an ATM and he wants to withdraw some cash",
+    "name" : "Bank withdraw",
     "scenarios" : [ {
       "name" : "Withdraw cash",
+      "description" : null,
       "operations" : [ {
         "name" : "withdraw_cash",
+        "type" : "double",
         "parameters" : [ {
           "name" : "cash",
-          "type" : null,
+          "type" : "double",
           "required" : true
         } ]
       }, {
         "name" : "enter_pin",
+        "type" : "void",
         "parameters" : [ {
           "name" : "pin",
-          "type" : null,
-          "required" : true
-        } ]
-      }, {
-        "name" : "enter_amount",
-        "parameters" : [ {
-          "name" : "amount",
-          "type" : null,
+          "type" : "int",
           "required" : true
         } ]
       }, {
         "name" : "check_pin",
+        "type" : "bool",
         "parameters" : [ {
           "name" : "pin",
-          "type" : null,
+          "type" : "int",
           "required" : true
         } ]
       }, {
         "name" : "give_cash",
+        "type" : "double",
         "parameters" : [ {
           "name" : "cash",
-          "type" : null,
+          "type" : "double",
           "required" : true
         } ]
       } ]

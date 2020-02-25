@@ -11,9 +11,9 @@ drive,2
 be,18
 use,2
 watch,1
+insert,4
 look,3
 show,1
-insert,3
 accept,2
 send,1
 know,1
@@ -41,13 +41,13 @@ state,1
 range,1
 put,1
 record,2
+take,2
 count,1
 make,7
 receive,1
 correct,1
 decide,1
 like,1
-take,1
 keep,1
 toss,1
 need,1
