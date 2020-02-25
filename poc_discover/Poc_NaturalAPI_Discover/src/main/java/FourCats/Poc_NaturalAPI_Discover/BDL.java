@@ -62,7 +62,11 @@ public class BDL {
 		//saveVerbsToFile();
 		//savePredicatesToFile();
 	}
-
+	public void useParseData(ParserData data){
+		for(String s: data.getList()){
+			addPredicate(s);
+		}
+	}
 	public void useLemmatizerData(LemmatizerData res){
 		for (LemmatizerData.WordTag wtag : res.getList()) {
 			if(wtag.getTag().contains("NN")) {
@@ -71,10 +75,6 @@ public class BDL {
 			if(wtag.getTag().contains("VB")) {
 				addVerb(wtag.getLemma());
 			}
-		}
-
-		for(String s: res.getPredicate()){
-			addPredicate(s);
 		}
 	}
 
@@ -89,7 +89,6 @@ public class BDL {
 		}
 		writer.write(sb.toString());
 		writer.close();
-		System.out.println("done!");
 	}
 
 	/*private void saveNounToFile() throws FileNotFoundException{
