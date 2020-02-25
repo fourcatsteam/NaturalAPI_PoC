@@ -10,12 +10,13 @@ public class FileAccess implements FileAccessInterface {
 		try{
 			BufferedReader input = new BufferedReader(new FileReader(filepath));
 			while((s=input.readLine()) != null){
-				fileContent += s;
+				fileContent += s + " ";
 			}
 
 			input.close();
 			
 		}catch(IOException e){
+			//modificare gestione eccezioni
 			fileContent="file non trovato";
 		}
 

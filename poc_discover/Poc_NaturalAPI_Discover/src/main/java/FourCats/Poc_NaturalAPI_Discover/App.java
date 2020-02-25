@@ -51,7 +51,7 @@ public class App
         bdl.useLemmatizerData(result); //Crea dipendenza?
         bdl.useParseData(data);
         bdl.saveToFile();
-        System.out.println("BDL generata correttamente");
+        System.out.println("BDL generato correttamente");
 
         /*LinkedList<WordCounter> nouns = bdl.getNouns();
         for(WordCounter w : nouns) {
