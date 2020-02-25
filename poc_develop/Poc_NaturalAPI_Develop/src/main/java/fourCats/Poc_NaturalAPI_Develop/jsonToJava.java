@@ -47,6 +47,17 @@ public class jsonToJava {
 	        for(Object result : results) {
 	        	JSONObject jo = (JSONObject) result;
 	        	String operation = (String) jo.get("name").toString();
+	        	
+	        	//camelCase metodi
+	        	String[] split = operation.split("_");
+	        	operation = "";
+	        	for(int i=0; i<split.length; i++) {
+	        		if(i>0) {
+	        			split[i] = split[i].substring(0,1).toUpperCase() + split[i].substring(1);
+	        		}
+	        		operation += split[i];
+	        	}
+	        	
 	        	operations.add(operation);
 	        	ArrayList<String> parameters = new ArrayList<String>();
 	        	JSONArray par = (JSONArray) jo.get("parameters");
