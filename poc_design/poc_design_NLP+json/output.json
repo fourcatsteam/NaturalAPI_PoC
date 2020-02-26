@@ -1,41 +1,56 @@
 {
-  "features" : [ {
-    "name" : "Bank withdraw",
-    "scenarios" : [ {
-      "name" : "Withdraw cash",
-      "description" : null,
-      "operations" : [ {
-        "name" : "withdraw_cash",
+  "users" : [ {
+    "name" : " robber",
+    "operations" : [ {
+      "name" : "display_message",
+      "type" : "void",
+      "parameters" : [ {
+        "name" : "message",
+        "type" : "string",
+        "required" : true
+      } ]
+    }, {
+      "name" : "enter_pin",
+      "type" : "int",
+      "parameters" : [ {
+        "name" : "pin",
+        "type" : "int",
+        "required" : true
+      } ]
+    }, {
+      "name" : "check_pin",
+      "type" : "bool",
+      "parameters" : [ {
+        "name" : "pin",
+        "type" : "int",
+        "required" : true
+      } ]
+    } ]
+  }, {
+    "name" : " user",
+    "operations" : [ {
+      "name" : "withdraw_cash",
+      "type" : "double",
+      "parameters" : [ {
+        "name" : "cash",
         "type" : "double",
-        "parameters" : [ {
-          "name" : "cash",
-          "type" : "double",
-          "required" : true
-        } ]
-      }, {
-        "name" : "enter_pin",
-        "type" : "void",
-        "parameters" : [ {
-          "name" : "pin",
-          "type" : "int",
-          "required" : true
-        } ]
-      }, {
-        "name" : "check_pin",
-        "type" : "bool",
-        "parameters" : [ {
-          "name" : "pin",
-          "type" : "int",
-          "required" : true
-        } ]
-      }, {
-        "name" : "give_cash",
-        "type" : "double",
-        "parameters" : [ {
-          "name" : "cash",
-          "type" : "double",
-          "required" : true
-        } ]
+        "required" : true
+      } ]
+    }, {
+      "name" : "check_validity",
+      "type" : "bool",
+      "parameters" : [ {
+        "name" : "validity",
+        "type" : null,
+        "required" : true
+      } ]
+    }, {
+      "name" : "display_message",
+      "type" : "void",
+      "parameters" : [ {
+        "name" : "message",
+        "type" : "string",
+        "required" : true
       } ]
     } ]
   } ]

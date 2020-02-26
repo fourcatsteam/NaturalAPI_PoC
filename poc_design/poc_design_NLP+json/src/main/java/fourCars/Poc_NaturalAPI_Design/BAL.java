@@ -4,28 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BAL{
-    private List<Feature> lFeatures;
+    private List<User> lUsers;
     
     public BAL() {
-        lFeatures = new ArrayList<Feature>();
+        lUsers = new ArrayList<User>();
     }
     
-    public BAL(List<Feature> featuresList) {
-        this.lFeatures = featuresList;
+    public BAL(List<User> usersList) {
+        this.lUsers = usersList;
     }
     
-    public void addFeatureToBAL(Feature featureToAdd) {
-        lFeatures.add(featureToAdd);
+    public void addUserToBAL(User userToAdd) {
+        lUsers.add(userToAdd);
     }
     
-    public List<Feature> getFeatures() {
-        return lFeatures;
+    public List<User> getUsers() {
+        return lUsers;
     }
     
     @Override
     public String toString() {
         String BALStr = "";
-        for (Feature f : lFeatures) {
+        for (User f : lUsers) {
             BALStr +=f.toString();
         }
         return BALStr;

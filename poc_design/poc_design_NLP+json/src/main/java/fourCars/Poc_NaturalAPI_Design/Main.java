@@ -3,6 +3,7 @@ package fourCars.Poc_NaturalAPI_Design;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,8 +21,8 @@ public class Main
     public static void main( String[] args ) throws IOException
     {
         
-      Feature feature = SupportModule.loadScenario("txt_documents\\prova.feature");
-      BAL bal = new BAL(Arrays.asList(feature));
+      List<User> lUsers = SupportModule.loadScenario("txt_documents\\prova.feature");
+      BAL bal = new BAL(lUsers);
       SupportModule.createJsonFromBAL(bal, "output.json");
         
     }

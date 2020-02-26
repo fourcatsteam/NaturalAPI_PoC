@@ -1,13 +1,17 @@
 package fourCars.Poc_NaturalAPI_Design;
 
+import java.awt.desktop.UserSessionEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -17,6 +21,7 @@ import FourCats.Poc_NaturalAPI_Discover.LemmatizerAccessInterface;
 import FourCats.Poc_NaturalAPI_Discover.LemmatizerData;
 import FourCats.Poc_NaturalAPI_Discover.ParserAccess;
 import FourCats.Poc_NaturalAPI_Discover.ParserAccessInterface;
+import edu.stanford.nlp.patterns.GetPatternsFromDataMultiClass.Flags;
 
 public class SupportModule {
     public static String getFeatureNameFromGherkin(String gherkinString) {
@@ -27,10 +32,28 @@ public class SupportModule {
     }
     
     public static String getScenarioNameFromGherkin(String gherkinString) {
-        //get scenario name by picking the text between keywords "Scenario:" and "Given:"
-        int indexFeatureStart = gherkinString.indexOf("Scenario:")+10;
-        int indexFeatureEnd = gherkinString.indexOf("Given")-1;
+        //get scenario name by picking the text between first row and "Given:"
+        int indexFeatureStart = 1;
+        int indexFeatureEnd = -1;
+        if (gherkinString.indexOf("As a:")!=-1)
+            indexFeatureEnd = gherkinString.indexOf("As a:")-1;
+        else
+            indexFeatureEnd = gherkinString.indexOf("Given")-1;
         return gherkinString.substring(indexFeatureStart,indexFeatureEnd);
+    }
+    
+    public static String getUserNameFromGherkin(String gherkinString) {
+        //get scenario user by picking the text between keywords "As a:" and "Given:"
+        //if there isn't the keyword "As as:" return "All"
+        int indexUserStart = -1;
+        int indexUserEnd = 0;
+        if (gherkinString.indexOf("As a:")!=-1) {
+            indexUserStart = gherkinString.indexOf("As a:")+5;
+            indexUserEnd = gherkinString.indexOf("Given")-1;
+            if (indexUserStart <= indexUserEnd)
+                return gherkinString.substring(indexUserStart,indexUserEnd);
+        }
+        return "All";
     }
    
     
@@ -45,7 +68,6 @@ public class SupportModule {
         }
         return lParameters;
     }
-    
     
     
    public static String loadFile(String filename) throws IOException {
@@ -70,29 +92,45 @@ public class SupportModule {
       return doc;
    }
    
-   public static Feature loadScenario(String scenarioPath) throws IOException {
-      String doc = loadFile(scenarioPath);
-      
-    //Separa il contenuto del document quando trova un "."
-      String[] sentences = doc.split("\\.");
-      
-      //Esegue la lemmatization del documento e lo stampa
+   public static List<User> loadScenario(String featurePath) throws IOException {
+      String doc = loadFile(featurePath);
+      //run document lemmatization
       LemmatizerAccessInterface lemmatizer = new LemmatizerAccess();
       LemmatizerData result = lemmatizer.lemmatizeSentence(doc);
       
       ParserAccessInterface depparser = new ParserAccess();
-      Feature feature = depparser.parseSentence(doc);
-      feature.setName(SupportModule.getFeatureNameFromGherkin(doc));
- 
-      //assigns name to scenarios
-      for(Scenario s: feature.getScenarios()) {
-          s.setName(SupportModule.getScenarioNameFromGherkin(doc));
-      }
+      List<User> lUsers = null;
+      User user = null;
+      String[] arrScenarios = doc.split("Scenario:"); //split all scenarios to different strings
+      //
+      for (String scenario : Arrays.asList(arrScenarios).subList(1, arrScenarios.length)) {
+          System.out.println("--------------------------------------GHERKIN SCENARIO: '" + SupportModule.getScenarioNameFromGherkin(scenario) + "'--------------------------------------");
+          System.out.println(scenario);
+          user = depparser.parseSentence(scenario);
+          user.setName(SupportModule.getUserNameFromGherkin(scenario));
+          boolean userFound = false; //check if the user is already in the users list (lUsers)
+          if (lUsers!=null) {
+              for (User u : lUsers) {
+                  if (user.getName().equals(u.getName())) {
+                      u.addOperations(user.getOperations());
+                      userFound = true;
+                      break;
+                  }
+              }
+              if(!userFound) 
+                  lUsers.add(user);
+          }
+          else {
+              lUsers = new ArrayList<User>();
+              lUsers.add(user);
+          }
          
-      System.out.println("Candidate operations for the Feature '" + SupportModule.getFeatureNameFromGherkin(doc) + "':" + "\n" + feature.toString());
+      }
+           
+      System.out.println("Candidate operations for the user '" + SupportModule.getUserNameFromGherkin(doc) + "':" + "\n" + user.toString());
       System.out.println("Candidate parameters for operations: \n" + SupportModule.getParametersFromNouns(result) + "\n");
       
-      return feature;
+      return lUsers;
        
    }
    
@@ -130,7 +168,10 @@ public class SupportModule {
            System.out.println("Please, insert the type for the parameter '" + mainCandidateParam +  "': (void, string, int, bool, double, float...)" );
            System.out.println("Otherwise, press the enter key.\n" );
            input = reader.readLine(); //param type
-           candidatesParameters.add(new Parameter(mainCandidateParam, input));
+           if (input.equals(""))
+               candidatesParameters.add(new Parameter(mainCandidateParam));
+           else 
+               candidatesParameters.add(new Parameter(mainCandidateParam, input));
            for (Parameter p : candidatesParameters)
                operation.addParameter(p);
        }

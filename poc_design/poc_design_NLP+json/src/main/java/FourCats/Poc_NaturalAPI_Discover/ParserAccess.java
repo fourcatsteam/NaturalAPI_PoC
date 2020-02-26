@@ -22,9 +22,8 @@ import edu.stanford.nlp.trees.GrammaticalStructure;
 import edu.stanford.nlp.trees.TypedDependency;
 import edu.stanford.nlp.util.CoreMap;
 import fourCars.Poc_NaturalAPI_Design.BlackList;
-import fourCars.Poc_NaturalAPI_Design.Feature;
+import fourCars.Poc_NaturalAPI_Design.User;
 import fourCars.Poc_NaturalAPI_Design.Operation;
-import fourCars.Poc_NaturalAPI_Design.Scenario;
 import fourCars.Poc_NaturalAPI_Design.SupportModule;
 
 public class ParserAccess implements ParserAccessInterface{
@@ -64,9 +63,9 @@ public class ParserAccess implements ParserAccessInterface{
         this.pipeline = new StanfordCoreNLP(props);
     }
 	
-	public Feature parseSentence(String documentContent) throws IOException { //MODIFICATO PER NATURAL API DESIGN
+	public User parseSentence(String documentContent) throws IOException { //MODIFICATO PER NATURAL API DESIGN
 		BlackList blackList = new BlackList();
-		Feature feature = new Feature();
+		User user = new User();
 		List<Operation> candidatesOperations = new ArrayList<Operation>();
 		String suggestedOp = null;
 		Operation selectedOperation = null;
@@ -75,7 +74,6 @@ public class ParserAccess implements ParserAccessInterface{
         this.pipeline.annotate(document);
         List<CoreMap> sentences = document.get(SentencesAnnotation.class);
         for(CoreMap sentence: sentences) {
-         
         	GrammaticalStructure gramstruct = depparser.predict(sentence);
         	Collection<TypedDependency> dependencies = gramstruct.typedDependencies();
         	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -88,10 +86,13 @@ public class ParserAccess implements ParserAccessInterface{
         		   System.out.println("Would you like to add '" + suggestedOp +  "' to your operations? 1. YES, 2. NO\n" );
         		   input = reader.readLine();
         		   if (input.equals("1")) {
-        		       System.out.println("Please, insert the return type for the opeartion '" + suggestedOp +  "': (void, string, int, bool, double, float...)" );
+        		       System.out.println("Please, insert the return type for the opearation '" + suggestedOp +  "': (void, string, int, bool, double, float...)" );
         		       System.out.println("Otherwise, press the enter key.\n" );
         		       input = reader.readLine(); //input for the type
-        		       selectedOperation = new Operation(suggestedOp,input);
+        		       if (input.equals(""))
+        		           selectedOperation = new Operation(suggestedOp);
+        		       else
+        		           selectedOperation = new Operation(suggestedOp,input);
         		       candidatesOperations.add(selectedOperation);
         		       SupportModule.suggestParameter(selectedOperation);
         		   }
@@ -103,8 +104,7 @@ public class ParserAccess implements ParserAccessInterface{
         		//relazione
         		//System.out.println(dep.reln());
         	}
-        	Scenario scenario = new Scenario(candidatesOperations);
-            feature.addScenario(scenario);
+            user.addOperations(candidatesOperations);
             // Iterate over all tokens in a sentence
             /*for (CoreLabel token: sentence.get(TokensAnnotation.class)) {
                 // Retrieve and add the lemma for each word into the
@@ -119,7 +119,7 @@ public class ParserAccess implements ParserAccessInterface{
 			Tree parent = leaf.parent(tree);
             System.out.print(leaf.label().value() + "-" + parent.label().value() + " ");
         }*/
-		return feature;
+		return user;
 	}
 	
 	private List<CoreLabel> tokenize(String str){
