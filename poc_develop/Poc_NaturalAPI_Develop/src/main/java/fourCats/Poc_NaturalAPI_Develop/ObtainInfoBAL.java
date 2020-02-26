@@ -12,12 +12,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class JsonToJava {
+public class ObtainInfoBAL {
 	
 	private Map<String,String> operationsMap;
 	private Map<String,ArrayList<String>> operationParametersMap;
 	
-	JsonToJava(){
+	ObtainInfoBAL(){
 		JSONParser parser = new JSONParser();
 	    
         Object obj;

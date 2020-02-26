@@ -4,20 +4,21 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
-public class CreateClass {
+public class CreateJava {
 	private Map<String,String> methods;
 	private Map<String,ArrayList<String>> parameters;
-	private JsonToJava json = new JsonToJava();
+	private ObtainInfoBAL infoBAL = new ObtainInfoBAL();
 	
-	CreateClass(){
-		methods = json.getOperationsMap();
-		parameters = json.getOperationParametersMap();
+	CreateJava(){
+		methods = infoBAL.getOperationsMap();
+		parameters = infoBAL.getOperationParametersMap();
 	}
 	
-	public void create() {
+	public void create() throws InputMismatchException{
 		Scanner scanner = new Scanner(System.in);
 		try {
 			for(Map.Entry<String,String> method : methods.entrySet()) {
@@ -34,6 +35,7 @@ public class CreateClass {
 				
 				System.out.println(className + ": interface or class? Press 1 for interface, 2 for class");
 				int choice = scanner.nextInt();
+
 				if(choice == 1) {
 					File file = new File("./java_classes/" + className +"Interface.java");
 					FileWriter fileWriter = new FileWriter(file);
@@ -48,12 +50,16 @@ public class CreateClass {
 					fileWriter.write("	public " + method.getValue() + " "+ method.getKey() + "(" + par + ") {\n\n	}\n}");
 					fileWriter.close();
 				}
+				else {
+					scanner.close();
+					throw new InputMismatchException("Errore: input non valido\nInput ammessi: 1 per interfaccia, 2 per classe");
+				}
 			}
 			scanner.close();
 			System.out.println("Classi java create!");
 		}
 		catch(IOException ioe) {
-			System.out.println("error");
+			ioe.printStackTrace();
 		}
 	}
 }
