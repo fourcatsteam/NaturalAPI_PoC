@@ -1,40 +1,18 @@
 package FourCats.Poc_NaturalAPI_Discover;
 
-import edu.stanford.nlp.ie.util.RelationTriple;
-import edu.stanford.nlp.io.IOUtils;
-import edu.stanford.nlp.ling.CoreAnnotations;
-import edu.stanford.nlp.naturalli.NaturalLogicAnnotations;
-import edu.stanford.nlp.naturalli.OpenIE;
-import edu.stanford.nlp.naturalli.SentenceFragment;
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
-import edu.stanford.nlp.semgraph.SemanticGraph;
-import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
-import edu.stanford.nlp.util.CoreMap;
-import edu.stanford.nlp.util.PropertiesUtils;
 
 import java.io.FileNotFoundException;
-import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
 
-/**
- * Hello world!
- *
- */
 public class App 
 {	
     public static void main( String[] args ) throws FileNotFoundException,Exception
     {
     	FileAccessInterface file = new FileAccess();
     	String documento1 = "atm.txt";
-    	Document doc = new Document("prova","Io", 2020,file.readDocument(documento1),"it");
+    	Document doc = new Document("doc1","Io", 2020,file.readDocument(documento1),"en");
         //System.out.println("---------------------- CONTENUTO DEL DOCUMENTO ----------------------" );
         //System.out.println(doc.getContent());
-        //Separa il contenuto del document quando trova un "."
-
-        //String[] sentences = doc.getContent().split("\\.");
         
         //Esegue la lemmatization del documento e lo stampa
         LemmatizerAccessInterface lemmatizer = new LemmatizerAccess();
@@ -50,9 +28,17 @@ public class App
         BDL bdl = new BDL();
         bdl.useLemmatizerData(result); //Crea dipendenza?
         bdl.useParseData(data);
-        bdl.saveToFile();
+        bdl.saveToFile("Project");
         System.out.println("BDL generato correttamente");
-
+        
+        System.out.println("----------------INTEGRAZIONE BDL----------------------------");
+        BDL loadedBdl = file.readBDL("Project");
+        String documento2 = "atm_wikipedia.txt";
+        Document otherDoc = new Document("doc2","Io",2020,file.readDocument(documento2),"en");
+        loadedBdl.useLemmatizerData(lemmatizer.lemmatizeSentence(otherDoc.getContent()));
+        loadedBdl.useParseData(depparser.parseSentence(otherDoc.getContent()));
+        loadedBdl.saveToFile("Project_with_integration");
+        System.out.println("BDL integrato correttamente");
         /*LinkedList<WordCounter> nouns = bdl.getNouns();
         for(WordCounter w : nouns) {
         	System.out.println(w.getWord() + " " + w.getCount());
