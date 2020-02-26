@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
@@ -13,14 +12,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class jsonToJava {
+public class JsonToJava {
 	
-	private String feature;
-	private String scenario;
-	private List<String> operations;
-	Map<String,ArrayList<String>> operationParameters;
+	private Map<String,String> operationsMap;
+	private Map<String,ArrayList<String>> operationParametersMap;
 	
-	jsonToJava(){
+	JsonToJava(){
 		JSONParser parser = new JSONParser();
 	    
         Object obj;
@@ -28,50 +25,50 @@ public class jsonToJava {
 			obj = parser.parse(new FileReader("output.json"));
 	        JSONObject jsonObject =  (JSONObject) obj;	        
 	        
-	        JSONArray results = (JSONArray) jsonObject.get("features");
-
-	        JSONObject resultObject = (JSONObject) results.get(0);
+	        JSONArray users = (JSONArray) jsonObject.get("users");
 	        
-	        String features = (String) resultObject.get("name").toString();
-	        setFeature(features);
+	        operationsMap = new HashMap<String,String>();
+	        operationParametersMap = new HashMap<String,ArrayList<String>>();
 	        
-	        results = (JSONArray) resultObject.get("scenarios");
-	        resultObject = (JSONObject) results.get(0);
-	        
-	        String scenarios = (String) resultObject.get("name").toString();
-	        setScenario(scenarios);
-	        
-	        results = (JSONArray) resultObject.get("operations");
-	        operations = new ArrayList<String>();
-	        operationParameters = new HashMap<String,ArrayList<String>>();
-	        for(Object result : results) {
-	        	JSONObject jo = (JSONObject) result;
-	        	String operation = (String) jo.get("name").toString();
+	        for(Object user : users) {
+	        	JSONObject jsonUser = (JSONObject) user;
 	        	
-	        	//camelCase metodi
-	        	String[] split = operation.split("_");
-	        	operation = "";
-	        	for(int i=0; i<split.length; i++) {
-	        		if(i>0) {
-	        			split[i] = split[i].substring(0,1).toUpperCase() + split[i].substring(1);
-	        		}
-	        		operation += split[i];
-	        	}
+	        	JSONArray operations = (JSONArray) jsonUser.get("operations");
 	        	
-	        	operations.add(operation);
-	        	ArrayList<String> parameters = new ArrayList<String>();
-	        	JSONArray par = (JSONArray) jo.get("parameters");
-	        	for(Object p : par) {
-	        		JSONObject jp = (JSONObject) p;
-	        		String name = (String) jp.get("name");
-	        		String type = (String) jp.get("type");
+	        	for(Object op : operations) {
+		        	JSONObject jsonOp = (JSONObject) op;
+		        	String operation = (String) jsonOp.get("name").toString();
+	        		String type = (String) jsonOp.get("type");
 	        		if(type == null) {
-	        			type = "Object";
+	        			type = "void";
 	        		}
-	        		parameters.add(type + " " + name);
-	        	}
-	        	operationParameters.put(operation, parameters);
+		        	
+		        	//camelCase metodi
+		        	String[] split = operation.split("_");
+		        	operation = "";
+		        	for(int i=0; i<split.length; i++) {
+		        		if(i>0) {
+		        			split[i] = split[i].substring(0,1).toUpperCase() + split[i].substring(1);
+		        		}
+		        		operation += split[i];
+		        	}
+		        	
+		        	operationsMap.put(operation,type);
+		        	ArrayList<String> parameters = new ArrayList<String>();
+		        	JSONArray par = (JSONArray) jsonOp.get("parameters");
+		        	for(Object parameter : par) {
+		        		JSONObject jsonParameter = (JSONObject) parameter;
+		        		String name = (String) jsonParameter.get("name");
+		        		String typePar = (String) jsonParameter.get("type");
+		        		if(typePar == null) {
+		        			typePar = "Object";
+		        		}
+		        		parameters.add(typePar + " " + name);
+		        	}
+		        	operationParametersMap.put(operation, parameters);
+		        }
 	        }
+
 	        
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -85,28 +82,16 @@ public class jsonToJava {
 		}
 	}
 	
-	public String getFeature() {
-		return feature;
+	public Map<String,String> getOperationsMap() {
+		return operationsMap;
 	}
-	public void setFeature(String feature) {
-		this.feature = feature;
+	public void setOperationsMap(Map<String,String> operationsMap) {
+		this.operationsMap = operationsMap;
 	}
-	public String getScenario() {
-		return scenario;
+	public Map<String,ArrayList<String>> getOperationParametersMap() {
+		return operationParametersMap;
 	}
-	public void setScenario(String scenario) {
-		this.scenario = scenario;
-	}
-	public List<String> getOperations() {
-		return operations;
-	}
-	public void setOperations(List<String> operations) {
-		this.operations = operations;
-	}
-	public Map<String,ArrayList<String>> getOperationParameters() {
-		return operationParameters;
-	}
-	public void setOperationParameters(Map<String,ArrayList<String>> operationParameters) {
-		this.operationParameters = operationParameters;
+	public void setOperationParametersMap(Map<String,ArrayList<String>> operationParametersMap) {
+		this.operationParametersMap = operationParametersMap;
 	}
 }

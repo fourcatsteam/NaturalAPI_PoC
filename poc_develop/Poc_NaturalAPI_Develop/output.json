@@ -1,43 +1,56 @@
 {
-  "features" : [ {
-    "name" : "Bank withdraw\nThe user is in front of an ATM and he wants to withdraw some cash",
-    "scenarios" : [ {
-      "name" : "Withdraw cash",
-      "operations" : [ {
-        "name" : "withdraw_cash",
-        "parameters" : [ {
-          "name" : "cash",
-          "type" : null,
-          "required" : true
-        } ]
-      }, {
-        "name" : "enter_pin",
-        "parameters" : [ {
-          "name" : "pin",
-          "type" : null,
-          "required" : true
-        } ]
-      }, {
-        "name" : "enter_amount",
-        "parameters" : [ {
-          "name" : "amount",
-          "type" : null,
-          "required" : true
-        } ]
-      }, {
-        "name" : "check_pin",
-        "parameters" : [ {
-          "name" : "pin",
-          "type" : null,
-          "required" : true
-        } ]
-      }, {
-        "name" : "give_cash",
-        "parameters" : [ {
-          "name" : "cash",
-          "type" : null,
-          "required" : true
-        } ]
+  "users" : [ {
+    "name" : " robber",
+    "operations" : [ {
+      "name" : "display_message",
+      "type" : "void",
+      "parameters" : [ {
+        "name" : "message",
+        "type" : "string",
+        "required" : true
+      } ]
+    }, {
+      "name" : "enter_pin",
+      "type" : "int",
+      "parameters" : [ {
+        "name" : "pin",
+        "type" : "int",
+        "required" : true
+      } ]
+    }, {
+      "name" : "check_pin",
+      "type" : "bool",
+      "parameters" : [ {
+        "name" : "pin",
+        "type" : "int",
+        "required" : true
+      } ]
+    } ]
+  }, {
+    "name" : " user",
+    "operations" : [ {
+      "name" : "withdraw_cash",
+      "type" : "double",
+      "parameters" : [ {
+        "name" : "cash",
+        "type" : "double",
+        "required" : true
+      } ]
+    }, {
+      "name" : "check_validity",
+      "type" : "bool",
+      "parameters" : [ {
+        "name" : "validity",
+        "type" : null,
+        "required" : true
+      } ]
+    }, {
+      "name" : "display_message",
+      "type" : "void",
+      "parameters" : [ {
+        "name" : "message",
+        "type" : "string",
+        "required" : true
       } ]
     } ]
   } ]

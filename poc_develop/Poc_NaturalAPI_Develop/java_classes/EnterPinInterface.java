@@ -1,4 +1,4 @@
 public interface EnterPinInterface{
 
-	public int enterPin(Object pin);
+	public int enterPin(int pin);
 }

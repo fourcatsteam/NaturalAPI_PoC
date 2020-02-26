@@ -4,34 +4,26 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class createClass {
-	private String name;
-	private List<String> methods;
+public class CreateClass {
+	private Map<String,String> methods;
 	private Map<String,ArrayList<String>> parameters;
-	private jsonToJava json = new jsonToJava();
+	private JsonToJava json = new JsonToJava();
 	
-	createClass(){
-		String[] names = json.getScenario().split(" ");
-		names[0] = names[0].substring(0,1).toUpperCase() + names[0].substring(1);
-		for (int i=1; i<names.length; i++) {
-			names[i] = names[i].substring(0,1).toUpperCase() + names[i].substring(1);
-			name = names[i-1] + names[i];
-		}
-		methods = json.getOperations();
-		parameters = json.getOperationParameters();
+	CreateClass(){
+		methods = json.getOperationsMap();
+		parameters = json.getOperationParametersMap();
 	}
 	
 	public void create() {
 		Scanner scanner = new Scanner(System.in);
 		try {
-			for(String method : methods) {
+			for(Map.Entry<String,String> method : methods.entrySet()) {
 				
-				String className = method.substring(0,1).toUpperCase() + method.substring(1); //CamelCase
- 				ArrayList<String>  parList = parameters.get(method);
+				String className = method.getKey().substring(0,1).toUpperCase() + method.getKey().substring(1); //CamelCase
+ 				ArrayList<String> parList = parameters.get(method.getKey());
 				String par = new String();
 				for(String s : parList) {
 					par += s;
@@ -46,21 +38,19 @@ public class createClass {
 					File file = new File("./java_classes/" + className +"Interface.java");
 					FileWriter fileWriter = new FileWriter(file);
 					fileWriter.write("public interface " + className + "Interface{\n\n");
-					System.out.println("Inserisci il tipo di ritorno del metodo " + method);
-					fileWriter.write("	public " + scanner.next() + " "+ method + "(" + par + ");\n}");
+					fileWriter.write("	public " + method.getValue() + " "+ method.getKey() + "(" + par + ");\n}");
 					fileWriter.close();
 				}
 				else if(choice == 2) {
 					File file = new File("./java_classes/" + className +".java");
 					FileWriter fileWriter = new FileWriter(file);
 					fileWriter.write("public class " + className + " {\n\n");
-					System.out.println("Inserisci il tipo di ritorno del metodo " + method);
-					fileWriter.write("	public " + scanner.next() + " "+ method + "(" + par + ") {\n\n	}\n}");
+					fileWriter.write("	public " + method.getValue() + " "+ method.getKey() + "(" + par + ") {\n\n	}\n}");
 					fileWriter.close();
 				}
 			}
 			scanner.close();
-			System.out.println("Classe java creata!");
+			System.out.println("Classi java create!");
 		}
 		catch(IOException ioe) {
 			System.out.println("error");
