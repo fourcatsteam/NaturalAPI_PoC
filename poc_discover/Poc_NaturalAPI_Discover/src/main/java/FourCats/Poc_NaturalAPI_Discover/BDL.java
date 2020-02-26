@@ -54,10 +54,10 @@ public class BDL {
 		return nouns;
 	}
 
-	public void saveToFile() throws FileNotFoundException {
-		saveListToFile(nouns,"Project.nouns.bdl.csv");
-		saveListToFile(verbs,"Project.verbs.bdl.csv");
-		saveListToFile(predicates,"Project.predicates.bdl.csv");
+	public void saveToFile(String filename) throws FileNotFoundException {
+		saveListToFile(nouns,filename+".nouns.bdl.csv");
+		saveListToFile(verbs,filename+".verbs.bdl.csv");
+		saveListToFile(predicates,filename+".predicates.bdl.csv");
 		//saveNounToFile();
 		//saveVerbsToFile();
 		//savePredicatesToFile();
