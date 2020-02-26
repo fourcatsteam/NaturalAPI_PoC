@@ -1,6 +1,6 @@
 class EnterPin {
 
 public:
-	int enterPin(int pin); 
+	virtual int enterPin(int pin); 
 
 }

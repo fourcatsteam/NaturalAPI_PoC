@@ -1,6 +1,6 @@
 class WithdrawCash {
 
 public:
-	double withdrawCash(double cash); 
+	double withdrawCash(double cash) const; 
 
 }
