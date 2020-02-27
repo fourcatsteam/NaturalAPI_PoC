@@ -86,7 +86,18 @@ public class Operation {
     
     @Override
     public String toString() {
-        return "opearationId:" + name + " parameters: " + param.toString();
+        String operationParams = "";
+        boolean firstParam = true;
+        for (Parameter par : param) {
+            if (firstParam) {
+                operationParams+=par.getType()+ " " + par.getName();
+                firstParam = false;
+            }
+            else {
+                operationParams+=", " + par.getType()+ " " + par.getName();
+            }
+        }
+        return this.type + " " + this.name + "(" + operationParams + ")";
     }
     
     
