@@ -1,3 +1,4 @@
 #MAC OS File
 .DS_Store
 **/target
+*.json
