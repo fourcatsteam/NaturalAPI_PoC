@@ -2,7 +2,7 @@ package FourCats.Poc_NaturalAPI_Discover;
 
 /*Coppia parola-conteggio utilizzata dal BDL*/
 
-public class WordCounter {
+public class WordCounter implements Comparable<WordCounter>{
 	private String word;
 	private Integer count;
 	
@@ -21,4 +21,10 @@ public class WordCounter {
 	
 	public String getWord() {return word;}
 	public Integer getCount() {return count;}
+	
+	public int compareTo(WordCounter w) {
+		if(count<w.count) return -1;
+		if(count==w.count) return 0;
+		return 1;
+	}
 }

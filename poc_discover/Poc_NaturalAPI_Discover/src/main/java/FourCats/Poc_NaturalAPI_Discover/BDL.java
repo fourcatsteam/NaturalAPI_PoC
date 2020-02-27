@@ -1,6 +1,7 @@
 package FourCats.Poc_NaturalAPI_Discover;
 
 import java.io.*;
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class BDL {
@@ -89,6 +90,13 @@ public class BDL {
 		}
 		writer.write(sb.toString());
 		writer.close();
+	}
+	
+	//ORDER BDL
+	public void order() {
+		Collections.sort(nouns,Collections.reverseOrder());
+		Collections.sort(verbs,Collections.reverseOrder());
+		Collections.sort(predicates,Collections.reverseOrder());
 	}
 
 	/*private void saveNounToFile() throws FileNotFoundException{
