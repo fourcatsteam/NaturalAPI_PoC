@@ -9,11 +9,12 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class CreateJava {
+	private ObtainInfoBAL infoBAL;
 	private Map<String,String> methods;
 	private Map<String,ArrayList<String>> parameters;
-	private ObtainInfoBAL infoBAL = new ObtainInfoBAL();
 	
 	CreateJava(){
+		infoBAL = new ObtainInfoBAL();
 		methods = infoBAL.getOperationsMap();
 		parameters = infoBAL.getOperationParametersMap();
 	}
