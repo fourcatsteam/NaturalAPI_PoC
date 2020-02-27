@@ -1,27 +1,24 @@
 package fourCars.Poc_NaturalAPI_Design;
 
-import java.awt.desktop.UserSessionEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import FourCats.Poc_NaturalAPI_Discover.LemmatizerAccess;
 import FourCats.Poc_NaturalAPI_Discover.LemmatizerAccessInterface;
 import FourCats.Poc_NaturalAPI_Discover.LemmatizerData;
 import FourCats.Poc_NaturalAPI_Discover.ParserAccess;
 import FourCats.Poc_NaturalAPI_Discover.ParserAccessInterface;
-import edu.stanford.nlp.patterns.GetPatternsFromDataMultiClass.Flags;
+import FourCats.Poc_NaturalAPI_Discover.ParserData;
+
 
 public class SupportModule {
     public static String getFeatureNameFromGherkin(String gherkinString) {
@@ -48,7 +45,7 @@ public class SupportModule {
         int indexUserStart = -1;
         int indexUserEnd = 0;
         if (gherkinString.indexOf("As a:")!=-1) {
-            indexUserStart = gherkinString.indexOf("As a:")+5;
+            indexUserStart = gherkinString.indexOf("As a:")+6;
             indexUserEnd = gherkinString.indexOf("Given")-1;
             if (indexUserStart <= indexUserEnd)
                 return gherkinString.substring(indexUserStart,indexUserEnd);
@@ -92,26 +89,27 @@ public class SupportModule {
       return doc;
    }
    
-   public static List<User> loadScenario(String featurePath) throws IOException {
+   public static List<User> loadFeature(String featurePath) throws IOException {
       String doc = loadFile(featurePath);
       //run document lemmatization
       LemmatizerAccessInterface lemmatizer = new LemmatizerAccess();
       LemmatizerData result = lemmatizer.lemmatizeSentence(doc);
       
       ParserAccessInterface depparser = new ParserAccess();
-      List<User> lUsers = null;
-      User user = null;
+      List<User> lUsers = new ArrayList<User>();
+      ParserData dobjParsedData = null;
       String[] arrScenarios = doc.split("Scenario:"); //split all scenarios to different strings
-      //
       for (String scenario : Arrays.asList(arrScenarios).subList(1, arrScenarios.length)) {
           System.out.println("--------------------------------------GHERKIN SCENARIO: '" + SupportModule.getScenarioNameFromGherkin(scenario) + "'--------------------------------------");
           System.out.println(scenario);
-          user = depparser.parseSentence(scenario);
-          user.setName(SupportModule.getUserNameFromGherkin(scenario));
-          boolean userFound = false; //check if the user is already in the users list (lUsers)
+          dobjParsedData = depparser.parseSentence(scenario);
+          User user = new User(SupportModule.getUserNameFromGherkin(scenario));//user in the current scenario
+          user.addOperations(SupportModule.suggestOperations(dobjParsedData, scenario, user, lUsers)); //add operations to the user
+          boolean userFound = false; //check if the user is already in the users list (lUsers) 
           if (lUsers!=null) {
               for (User u : lUsers) {
                   if (user.getName().equals(u.getName())) {
+                      //user already in the users list -> add operations the already existing user
                       u.addOperations(user.getOperations());
                       userFound = true;
                       break;
@@ -124,10 +122,8 @@ public class SupportModule {
               lUsers = new ArrayList<User>();
               lUsers.add(user);
           }
-         
       }
-           
-      System.out.println("Candidate operations for the user '" + SupportModule.getUserNameFromGherkin(doc) + "':" + "\n" + user.toString());
+      
       System.out.println("Candidate parameters for operations: \n" + SupportModule.getParametersFromNouns(result) + "\n");
       
       return lUsers;
@@ -167,7 +163,7 @@ public class SupportModule {
        if (input.equals("1")) {
            System.out.println("Please, insert the type for the parameter '" + mainCandidateParam +  "': (void, string, int, bool, double, float...)" );
            System.out.println("Otherwise, press the enter key.\n" );
-           input = reader.readLine(); //param type
+           input = reader.readLine(); //parameter type
            if (input.equals(""))
                candidatesParameters.add(new Parameter(mainCandidateParam));
            else 
@@ -176,5 +172,165 @@ public class SupportModule {
                operation.addParameter(p);
        }
        //blackList.addTerm(suggestedOp); 
+   }
+   
+   /**
+    * suggests operations to the user who can accept or refuse to add them to the list of selected operations
+    * if an operation is already defined for a specific user, then show alert and ask what to do (update or continue)
+    * @return the list of selected operations
+    * @param dobjParsedData is the output of the parseSentece method of the NLP for the specific scenario
+    * @param scenario is the string representation of the scenario we want to work with (It's a single scenario in a feature)
+    * @param userScenario is the user to who the scenario is related
+    * @param lAllUsers is the list of all users who will be or who have already been added to the BAL
+    */
+   public static List<Operation> suggestOperations(ParserData dobjParsedData, String scenario, User userScenario, List<User> lAllUsers) throws IOException {
+       //suggest operation given all the dobj found by NLP for the specific scenario 
+       BlackList blackList = new BlackList();
+       BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+       String input = null;
+       Operation selectedOperation = null;
+       String suggestedOpFormatted = null; //formatted like 'withdraw_cash' (with the underscore)
+       List<Operation> candidatesOperations = new ArrayList<Operation>(); //list of suggested operation that have been accepted
+       for (String suggestedOp: dobjParsedData.getList()) {
+           suggestedOpFormatted = suggestedOp.replaceAll(" ", "_");
+           //check that the suggested operation is not in the blackList and other optimizations for the suggestion
+           if(!blackList.contains(suggestedOpFormatted) && !blackList.contains(suggestedOpFormatted.substring(suggestedOpFormatted.indexOf("_")+1))) {
+               selectedOperation = new Operation(suggestedOpFormatted);
+               if(SupportModule.isDuplicateOperation(selectedOperation, userScenario, lAllUsers)) { 
+                   //if the operation is already associated with that user then show alert and ask what to do
+                   System.out.println("--------------------------------------------!DUPLICATE OPERATION ALERT!--------------------------------------------" );
+                   System.out.println("I really think that the operation: '" + selectedOperation.getName() + "' can be helpful to you");
+                 
+                   List <Operation> lOperationAlredyDefined = SupportModule.getDuplicateOperations(selectedOperation, userScenario, lAllUsers);
+                   System.out.println("Those operations '"  + lOperationAlredyDefined.toString() + "' have already been defined for the user '" + userScenario.getName() + "'");
+                   System.out.println("Would you like to update one of them? 1. YES, 2. NO\n" );
+                   input = reader.readLine();
+                   if (input.equals("1")) {
+                       int switchCase = 1;
+                       if (lOperationAlredyDefined.size()>1) {
+                           System.out.println("Choose which operation you would like to update:" );
+                           for (Operation definedOp: lOperationAlredyDefined) {
+                               System.out.println(switchCase + ". " + definedOp);
+                               switchCase++;
+                               input = reader.readLine();
+                           }
+                       }
+                       SupportModule.updateOperation(lOperationAlredyDefined.get(Integer.valueOf(input)-1));
+                   }
+               }
+               else {
+                   System.out.println("--------------------------------------------NEW OPERATION SUGGESTION--------------------------------------------" );
+                   System.out.println("Would you like to add '" + suggestedOpFormatted +  "' to your operations? 1. YES, 2. NO\n" );
+                   input = reader.readLine();
+                   if (input.equals("1")) {
+                       System.out.println("Please, insert the return type for the operation '" + suggestedOpFormatted +  "': (void, string, int, bool, double, float...)" );
+                       System.out.println("Otherwise, press the enter key.\n" );
+                       input = reader.readLine(); //input for the return type of the operation
+                       if (!input.equals(""))
+                           selectedOperation.setType(input);             
+                       candidatesOperations.add(selectedOperation);
+                       SupportModule.suggestParameter(selectedOperation);
+                       blackList.addTerm(suggestedOpFormatted);
+                   }
+               }
+           }
+       }
+       return candidatesOperations;
+      
+   }
+   
+ //check if an operation with the same name is already associate with an user who has the same name of the given user
+   public static boolean isDuplicateOperation(Operation operationToCheck, User relativeUser, List<User> lUsers) {
+       List<Operation> operationsAlreadyInList = new ArrayList<Operation>();
+       for (User userAlreadyInList : lUsers) {
+           operationsAlreadyInList = userAlreadyInList.getOperations();
+           if (userAlreadyInList.getName().equals(relativeUser.getName())){
+               for (Operation operationInList : operationsAlreadyInList) {
+                   if (operationInList.getName().equals(operationToCheck.getName()))
+                       return true;
+               }
+           }      
+       }
+       return false;
+   }
+   
+   // return a list of operations which has the same name of the operationToCheck
+   // and that are already been associated with an user (from lUsers) who has the same name of the given user(relativeUser)
+   public static List<Operation> getDuplicateOperations(Operation operationToCheck, User relativeUser, List<User> lUsers) {
+       List<Operation> lDuplicateOperations = new ArrayList<Operation>(); //to return
+       List<Operation> operationsAlreadyInList = new ArrayList<Operation>();
+       for (User userAlreadyInList : lUsers) {
+           operationsAlreadyInList = userAlreadyInList.getOperations();
+           if (userAlreadyInList.getName().equals(relativeUser.getName())){
+               for (Operation operationInList : operationsAlreadyInList) {
+                   if (operationInList.getName().equals(operationToCheck.getName())) {
+                       lDuplicateOperations.add(operationInList);
+                   }
+               }
+           }      
+       }
+       return lDuplicateOperations;
+   }
+   
+   public static void updateOperation(Operation operationToUpdate) throws IOException {
+       BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+       String input = null;
+       System.out.println("-----------------------------------------OPERATION TO UPDATE: '" + operationToUpdate.toString() + "'-----------------------------------------" );
+       System.out.println("1. Add new parameter");
+       System.out.println("2. Update return type");
+       System.out.println("3. Abort update");
+       input = reader.readLine();
+       switch(input) {
+           case "1":{
+               System.out.println("-----------------------------------------ADD PARAMETER TO: '" + operationToUpdate.toString() + "'-----------------------------------------");
+               Parameter paramToAdd = new Parameter();
+               System.out.println("Insert parameter name");
+               input = reader.readLine();
+               if (!input.equals("")) {
+                   paramToAdd.setName(input);
+                   System.out.println("Insert parameter type");
+                   input = reader.readLine();
+                   if (!input.equals("")) {
+                       paramToAdd.setType(input);
+                   }
+                   System.out.println("Is this parameter required? 1. TRUE, 2. FALSE");
+                   Boolean required = null;
+                   input = reader.readLine();
+                   switch(input) {
+                       case "1": required = true;
+                       case "2": required = false;
+                       default:
+                           required = null;
+                   }
+                   paramToAdd.setRequired(required);
+                   operationToUpdate.addParameter(paramToAdd);
+                   System.out.println("Done! This is your updated opearation: '" + operationToUpdate.toString() + "'");
+               }
+               else {
+                   System.out.println("Error. No changes have been made.");
+               }
+               break;
+           }
+           case "2":{
+               System.out.println("-----------------------------------------UPDATE RETURN TYPE FOR: '" + operationToUpdate.toString() + "'-----------------------------------------");
+               System.out.println("Insert the new return type for the operation");
+               input = reader.readLine();
+               if (!input.equals("")) {
+                   operationToUpdate.setType(input);
+                   System.out.println("Done! This is your updated opearation: '" + operationToUpdate.toString() + "'");
+               }
+               else if(input.equals("") || input.equals(operationToUpdate.getType())) {
+                   System.out.println("Error. No changes have been made.");
+               }
+               break;
+           }
+           case "3":{
+               System.out.println("Abort. No changes have been made.");
+               break;
+           }
+           default:
+               System.out.println("Error. No changes have been made.");
+               break;
+       }
    }
 }

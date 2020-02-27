@@ -1,10 +1,6 @@
 package FourCats.Poc_NaturalAPI_Discover;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
@@ -21,10 +17,6 @@ import edu.stanford.nlp.process.TokenizerFactory;
 import edu.stanford.nlp.trees.GrammaticalStructure;
 import edu.stanford.nlp.trees.TypedDependency;
 import edu.stanford.nlp.util.CoreMap;
-import fourCars.Poc_NaturalAPI_Design.BlackList;
-import fourCars.Poc_NaturalAPI_Design.User;
-import fourCars.Poc_NaturalAPI_Design.Operation;
-import fourCars.Poc_NaturalAPI_Design.SupportModule;
 
 public class ParserAccess implements ParserAccessInterface{
 	protected StanfordCoreNLP pipeline;
@@ -62,64 +54,44 @@ public class ParserAccess implements ParserAccessInterface{
          */
         this.pipeline = new StanfordCoreNLP(props);
     }
-	
-	public User parseSentence(String documentContent) throws IOException { //MODIFICATO PER NATURAL API DESIGN
-		BlackList blackList = new BlackList();
-		User user = new User();
-		List<Operation> candidatesOperations = new ArrayList<Operation>();
-		String suggestedOp = null;
-		Operation selectedOperation = null;
-		Annotation document = new Annotation(documentContent);
-		// run all Annotators on this text
+	public ParserData parseSentence(String documentContent) {
+
+        Annotation document = new Annotation(documentContent);
+        // run all Annotators on this text
         this.pipeline.annotate(document);
+        ParserData data = new ParserData();
+
         List<CoreMap> sentences = document.get(SentencesAnnotation.class);
         for(CoreMap sentence: sentences) {
-        	GrammaticalStructure gramstruct = depparser.predict(sentence);
-        	Collection<TypedDependency> dependencies = gramstruct.typedDependencies();
-        	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            String input = null;
-        	for(TypedDependency dep : dependencies) {
-        	    suggestedOp = dep.gov().lemma() + "_" + dep.dep().lemma();
-        		//parola principale
-        		if(dep.reln().getShortName().equalsIgnoreCase("dobj") && !blackList.contains(suggestedOp) && !blackList.contains(dep.dep().lemma())) {
-        		   System.out.println("--------------------------------------------NEW OPERATION SUGGESTION--------------------------------------------" );
-        		   System.out.println("Would you like to add '" + suggestedOp +  "' to your operations? 1. YES, 2. NO\n" );
-        		   input = reader.readLine();
-        		   if (input.equals("1")) {
-        		       System.out.println("Please, insert the return type for the opearation '" + suggestedOp +  "': (void, string, int, bool, double, float...)" );
-        		       System.out.println("Otherwise, press the enter key.\n" );
-        		       input = reader.readLine(); //input for the type
-        		       if (input.equals(""))
-        		           selectedOperation = new Operation(suggestedOp);
-        		       else
-        		           selectedOperation = new Operation(suggestedOp,input);
-        		       candidatesOperations.add(selectedOperation);
-        		       SupportModule.suggestParameter(selectedOperation);
-        		   }
-        		   blackList.addTerm(suggestedOp); 
-        		}
-        		
-        		//parola dipendente
-        		//System.out.println(dep.dep());
-        		//relazione
-        		//System.out.println(dep.reln());
-        	}
-            user.addOperations(candidatesOperations);
+            GrammaticalStructure gramstruct = depparser.predict(sentence);
+            Collection<TypedDependency> dependencies = gramstruct.typedDependencies();
+            for(TypedDependency dep : dependencies) {
+                //parola principale
+                //System.out.println(dep);
+
+                if(dep.reln().getShortName().equalsIgnoreCase("dobj")) {
+                    data.addElement(dep.gov().lemma()+ " " + dep.dep().lemma());
+                }
+                //parola dipendente
+                //System.out.println(dep.dep());
+                //relazione
+                //System.out.println(dep.reln());
+            }
             // Iterate over all tokens in a sentence
             /*for (CoreLabel token: sentence.get(TokensAnnotation.class)) {
                 // Retrieve and add the lemma for each word into the
                 // list of lemmas
             }*/
         }
-        
-		/*CoreMap tokens = tokenize(sentence); 
-		Tree tree = depparser.predict(sentence);
-		List<Tree> leaves = tree.getLeaves();
-		for (Tree leaf : leaves) {
-			Tree parent = leaf.parent(tree);
+        //System.out.println("----------- /TypedDependency/ -----------");
+        /*CoreMap tokens = tokenize(sentence);
+        Tree tree = depparser.predict(sentence);
+        List<Tree> leaves = tree.getLeaves();
+        for (Tree leaf : leaves) {
+            Tree parent = leaf.parent(tree);
             System.out.print(leaf.label().value() + "-" + parent.label().value() + " ");
         }*/
-		return user;
+        return data;
 	}
 	
 	private List<CoreLabel> tokenize(String str){

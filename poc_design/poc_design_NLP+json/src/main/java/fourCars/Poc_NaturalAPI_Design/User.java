@@ -1,7 +1,6 @@
 package fourCars.Poc_NaturalAPI_Design;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class User {
@@ -36,6 +35,15 @@ public class User {
    
    public List<Operation> getOperations() {
        return lOperation;
+   }
+   
+   public List<Operation> getOperationsByName(String operationName) {
+       List<Operation> lSameNameOperations = new ArrayList<Operation>();
+       for (Operation op : lOperation) {
+           if (op.getName().equals(operationName))
+               lSameNameOperations.add(op);
+       }
+       return lSameNameOperations;
    }
    
    @Override

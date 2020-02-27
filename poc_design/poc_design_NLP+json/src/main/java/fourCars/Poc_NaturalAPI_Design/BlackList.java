@@ -24,8 +24,5 @@ public class BlackList {
     public boolean contains(String term) {
         return blackList.contains(term);
     }
-    public boolean contains(List<String> listTerms) {
-        return blackList.contains(listTerms);
-    }
     
 }
