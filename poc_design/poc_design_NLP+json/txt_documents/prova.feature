@@ -1,6 +1,6 @@
 Feature: Bank withdraw
 Scenario: Display error message
-As a: robber
+As a: Robber
 Given the user is in front of an ATM
 When the user inserts the card in the ATM
 And the user enters the pin of the card

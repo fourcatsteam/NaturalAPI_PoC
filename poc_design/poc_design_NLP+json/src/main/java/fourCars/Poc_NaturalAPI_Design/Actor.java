@@ -3,16 +3,16 @@ package fourCars.Poc_NaturalAPI_Design;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class Actor {
     private String name;
     private List<Operation> lOperation;
     
-    public User(){
+    public Actor(){
         this.name = null;
         this.lOperation = new ArrayList<Operation>();
     }
     
-    public User(String userName){
+    public Actor(String userName){
         this.name = userName;
         this.lOperation = new ArrayList<Operation>();
     }

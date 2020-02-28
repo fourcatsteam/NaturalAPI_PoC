@@ -9,8 +9,8 @@ public class Main
     public static void main( String[] args ) throws IOException
     {
         
-      List<User> lUsers = SupportModule.loadFeature("txt_documents\\prova.feature");
-      BAL bal = new BAL(lUsers);
+      List<Actor> lActors = SupportModule.elaborateFeature("txt_documents\\prova.feature");
+      BAL bal = new BAL(lActors);
       SupportModule.createJsonFromBAL(bal, "output.json");
         
     }

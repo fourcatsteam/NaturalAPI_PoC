@@ -4,28 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BAL{
-    private List<User> lUsers;
+    private List<Actor> lActors;
     
     public BAL() {
-        lUsers = new ArrayList<User>();
+        lActors = new ArrayList<Actor>();
     }
     
-    public BAL(List<User> usersList) {
-        this.lUsers = usersList;
+    public BAL(List<Actor> ActorsList) {
+        this.lActors = ActorsList;
     }
     
-    public void addUserToBAL(User userToAdd) {
-        lUsers.add(userToAdd);
+    public void addUserToBAL(Actor userToAdd) {
+        lActors.add(userToAdd);
     }
     
-    public List<User> getUsers() {
-        return lUsers;
+    public List<Actor> getActors() {
+        return lActors;
     }
     
     @Override
     public String toString() {
         String BALStr = "";
-        for (User f : lUsers) {
+        for (Actor f : lActors) {
             BALStr +=f.toString();
         }
         return BALStr;
