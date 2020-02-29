@@ -26,4 +26,3 @@ And the user enters the pin of the card
 And the user enters the amount of cash he wants to withdraw
 Then the ATM should check the validity of the card
 And the ATM should display an error message
-

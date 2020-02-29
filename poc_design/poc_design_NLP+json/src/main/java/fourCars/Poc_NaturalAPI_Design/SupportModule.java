@@ -40,7 +40,7 @@ public class SupportModule {
     }
     
     public static String getActorNameFromGherkin(String gherkinString) {
-        //get scenario user by picking the text between keywords "As a:" and "Given:"
+        //get scenario actor by picking the text between keywords "As a:" and "Given:"
         //if there isn't the keyword "As as:" return "All"
         int indexActorStart = -1;
         int indexActorEnd = 0;
@@ -103,19 +103,19 @@ public class SupportModule {
           System.out.println("--------------------------------------GHERKIN SCENARIO: '" + SupportModule.getScenarioNameFromGherkin(scenario) + "'--------------------------------------");
           System.out.println(scenario);
           dobjParsedData = depparser.parseSentence(scenario);
-          Actor actor = new Actor(SupportModule.getActorNameFromGherkin(scenario));//user in the current scenario
-          actor.addOperations(SupportModule.suggestOperations(dobjParsedData, scenario, actor, lActors)); //add operations to the user
-          boolean userFound = false; //check if the user is already in the Actors list (lActors) 
+          Actor actor = new Actor(SupportModule.getActorNameFromGherkin(scenario));//actor in the current scenario
+          actor.addOperations(SupportModule.suggestOperations(dobjParsedData, scenario, actor, lActors)); //add operations to the actor
+          boolean actorFound = false; //check if the actor is already in the Actors list (lActors) 
           if (lActors!=null) {
               for (Actor u : lActors) {
                   if (actor.getName().equals(u.getName())) {
-                      //user already in the Actors list -> add operations the already existing user
+                      //actor already in the Actors list -> add operations the already existing actor
                       u.addOperations(actor.getOperations());
-                      userFound = true;
+                      actorFound = true;
                       break;
                   }
               }
-              if(!userFound) 
+              if(!actorFound) 
                   lActors.add(actor);
           }
           else {
@@ -142,7 +142,6 @@ public class SupportModule {
              mapper.writeValue(new File(outputPath), bal);
              System.out.println("\n File json creato!");
          } catch (JsonProcessingException e) {
-             // TODO Auto-generated catch block
              e.printStackTrace();
          }
    }
@@ -175,12 +174,12 @@ public class SupportModule {
    }
    
    /**
-    * suggests operations to the user who can accept or refuse to add them to the list of selected operations
-    * if an operation is already defined for a specific user, then show alert and ask what to do (update or continue)
+    * suggests operations to the actor who can accept or refuse to add them to the list of selected operations
+    * if an operation is already defined for a specific actor, then show alert and ask what to do (update or continue)
     * @return the list of selected operations
     * @param dobjParsedData is the output of the parseSentece method of the NLP for the specific scenario
     * @param scenario is the string representation of the scenario we want to work with (It's a single scenario in a feature)
-    * @param ActorScenario is the user to who the scenario is related
+    * @param ActorScenario is the actor to who the scenario is related
     * @param lAllActors is the list of all Actors who will be or who have already been added to the BAL
     */
    public static List<Operation> suggestOperations(ParserData dobjParsedData, String scenario, Actor ActorScenario, List<Actor> lAllActors) throws IOException {
@@ -197,12 +196,12 @@ public class SupportModule {
            if(!blackList.contains(suggestedOpFormatted) && !blackList.contains(suggestedOpFormatted.substring(suggestedOpFormatted.indexOf("_")+1))) {
                selectedOperation = new Operation(suggestedOpFormatted);
                if(SupportModule.isDuplicateOperation(selectedOperation, ActorScenario, lAllActors)) { 
-                   //if the operation is already associated with that user then show alert and ask what to do
+                   //if the operation is already associated with that actor then show alert and ask what to do
                    System.out.println("--------------------------------------------!DUPLICATE OPERATION ALERT!--------------------------------------------" );
                    System.out.println("I really think that the operation: '" + selectedOperation.getName() + "' can be helpful to you");
                  
                    List <Operation> lOperationAlredyDefined = SupportModule.getDuplicateOperations(selectedOperation, ActorScenario, lAllActors);
-                   System.out.println("Those operations '"  + lOperationAlredyDefined.toString() + "' have already been defined for the user '" + ActorScenario.getName() + "'");
+                   System.out.println("Those operations '"  + lOperationAlredyDefined.toString() + "' have already been defined for the actor '" + ActorScenario.getName() + "'");
                    System.out.println("Would you like to update one of them? 1. YES, 2. NO\n" );
                    input = reader.readLine();
                    if (input.equals("1")) {
@@ -239,12 +238,12 @@ public class SupportModule {
       
    }
    
- //check if an operation with the same name is already associate with an user who has the same name of the given user
+ //check if an operation with the same name is already associate with an actor who has the same name of the given actor
    public static boolean isDuplicateOperation(Operation operationToCheck, Actor relativeActor, List<Actor> lActors) {
        List<Operation> operationsAlreadyInList = new ArrayList<Operation>();
-       for (Actor userAlreadyInList : lActors) {
-           operationsAlreadyInList = userAlreadyInList.getOperations();
-           if (userAlreadyInList.getName().equals(relativeActor.getName())){
+       for (Actor actorAlreadyInList : lActors) {
+           operationsAlreadyInList = actorAlreadyInList.getOperations();
+           if (actorAlreadyInList.getName().equals(relativeActor.getName())){
                for (Operation operationInList : operationsAlreadyInList) {
                    if (operationInList.getName().equals(operationToCheck.getName()))
                        return true;
@@ -255,13 +254,13 @@ public class SupportModule {
    }
    
    // return a list of operations which has the same name of the operationToCheck
-   // and that are already been associated with an user (from lActors) who has the same name of the given user(relativeActor)
+   // and that are already been associated with an actor (from lActors) who has the same name of the given actor(relativeActor)
    public static List<Operation> getDuplicateOperations(Operation operationToCheck, Actor relativeActor, List<Actor> lActors) {
        List<Operation> lDuplicateOperations = new ArrayList<Operation>(); //to return
        List<Operation> operationsAlreadyInList = new ArrayList<Operation>();
-       for (Actor userAlreadyInList : lActors) {
-           operationsAlreadyInList = userAlreadyInList.getOperations();
-           if (userAlreadyInList.getName().equals(relativeActor.getName())){
+       for (Actor actorAlreadyInList : lActors) {
+           operationsAlreadyInList = actorAlreadyInList.getOperations();
+           if (actorAlreadyInList.getName().equals(relativeActor.getName())){
                for (Operation operationInList : operationsAlreadyInList) {
                    if (operationInList.getName().equals(operationToCheck.getName())) {
                        lDuplicateOperations.add(operationInList);

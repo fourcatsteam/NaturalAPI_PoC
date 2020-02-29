@@ -1,6 +1,6 @@
 {
   "actors" : [ {
-    "name" : "robber",
+    "name" : "Robber",
     "operations" : [ {
       "name" : "display_message",
       "type" : "void",
@@ -27,7 +27,7 @@
       } ]
     } ]
   }, {
-    "name" : "user",
+    "name" : "Custumer",
     "operations" : [ {
       "name" : "withdraw_cash",
       "type" : "double",
