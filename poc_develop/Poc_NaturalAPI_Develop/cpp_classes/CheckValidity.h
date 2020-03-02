@@ -1,6 +1,6 @@
 class CheckValidity {
 
 public:
-	virtual bool checkValidity(Object validity) const; 
+	virtual void checkValidity(bool validity) = 0; 
 
 }

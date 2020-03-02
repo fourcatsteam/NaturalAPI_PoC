@@ -1,6 +1,6 @@
 class DisplayMessage {
 
 public:
-	void displayMessage(string message); 
+	void displayMessage(string message) const; 
 
 }

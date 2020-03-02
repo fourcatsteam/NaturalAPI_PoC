@@ -1,6 +1,6 @@
 class CheckPin {
 
 public:
-	virtual bool checkPin(int pin) = 0; 
+	virtual void checkPin(int pin) const = 0; 
 
 }

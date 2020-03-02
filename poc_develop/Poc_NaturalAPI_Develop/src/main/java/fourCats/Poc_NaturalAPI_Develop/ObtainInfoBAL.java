@@ -22,18 +22,18 @@ public class ObtainInfoBAL {
 	    
         Object obj;
 		try {
-			obj = parser.parse(new FileReader("output.json"));
+			obj = parser.parse(new FileReader("bal.json"));
 	        JSONObject jsonObject =  (JSONObject) obj;	        
 	        
-	        JSONArray users = (JSONArray) jsonObject.get("users");
+	        JSONArray actors = (JSONArray) jsonObject.get("actors");
 	        
 	        operationsMap = new HashMap<String,String>();
 	        operationParametersMap = new HashMap<String,ArrayList<String>>();
 	        
-	        for(Object user : users) {
-	        	JSONObject jsonUser = (JSONObject) user;
+	        for(Object actor : actors) {
+	        	JSONObject jsonActor = (JSONObject) actor;
 	        	
-	        	JSONArray operations = (JSONArray) jsonUser.get("operations");
+	        	JSONArray operations = (JSONArray) jsonActor.get("operations");
 	        	
 	        	for(Object op : operations) {
 		        	JSONObject jsonOp = (JSONObject) op;

@@ -11,7 +11,6 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
         
         System.out.println("Premere 1 per Java, 2 per C++");
         Scanner in = new Scanner(System.in);

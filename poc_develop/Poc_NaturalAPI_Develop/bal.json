@@ -1,6 +1,6 @@
 {
-  "users" : [ {
-    "name" : " robber",
+  "actors" : [ {
+    "name" : "Robber",
     "operations" : [ {
       "name" : "display_message",
       "type" : "void",
@@ -11,7 +11,7 @@
       } ]
     }, {
       "name" : "enter_pin",
-      "type" : "int",
+      "type" : "void",
       "parameters" : [ {
         "name" : "pin",
         "type" : "int",
@@ -19,7 +19,7 @@
       } ]
     }, {
       "name" : "check_pin",
-      "type" : "bool",
+      "type" : "void",
       "parameters" : [ {
         "name" : "pin",
         "type" : "int",
@@ -27,7 +27,7 @@
       } ]
     } ]
   }, {
-    "name" : " user",
+    "name" : "Custumer",
     "operations" : [ {
       "name" : "withdraw_cash",
       "type" : "double",
@@ -37,19 +37,35 @@
         "required" : true
       } ]
     }, {
-      "name" : "check_validity",
-      "type" : "bool",
+      "name" : "enter_pin",
+      "type" : "void",
       "parameters" : [ {
-        "name" : "validity",
-        "type" : null,
+        "name" : "pin",
+        "type" : "int",
         "required" : true
       } ]
     }, {
-      "name" : "display_message",
+      "name" : "enter_amount",
       "type" : "void",
       "parameters" : [ {
-        "name" : "message",
-        "type" : "string",
+        "name" : "amount",
+        "type" : "double",
+        "required" : true
+      } ]
+    }, {
+      "name" : "check_pin",
+      "type" : "void",
+      "parameters" : [ {
+        "name" : "pin",
+        "type" : "int",
+        "required" : true
+      } ]
+    }, {
+      "name" : "check_validity",
+      "type" : "void",
+      "parameters" : [ {
+        "name" : "validity",
+        "type" : "bool",
         "required" : true
       } ]
     } ]

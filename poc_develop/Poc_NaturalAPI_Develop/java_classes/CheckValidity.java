@@ -1,6 +1,6 @@
 public class CheckValidity {
 
-	public bool checkValidity(Object validity) {
+	public void checkValidity(bool validity) {
 
 	}
 }
