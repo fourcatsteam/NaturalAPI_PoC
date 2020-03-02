@@ -60,9 +60,6 @@ public class ObtainInfoBAL {
 		        		JSONObject jsonParameter = (JSONObject) parameter;
 		        		String name = (String) jsonParameter.get("name");
 		        		String typePar = (String) jsonParameter.get("type");
-		        		if(typePar == null) {
-		        			typePar = "Object";
-		        		}
 		        		parameters.add(typePar + " " + name);
 		        	}
 		        	operationParametersMap.put(operation, parameters);

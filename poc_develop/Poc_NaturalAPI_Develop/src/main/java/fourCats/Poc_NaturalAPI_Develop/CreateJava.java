@@ -34,6 +34,7 @@ public class CreateJava {
 						par += ",";
 					}
 				}
+				par = par.replaceAll("null","Object");
 				
 				System.out.println(className + ": interface or class? Press 1 for interface, 2 for class");
 				int choice = scanner.nextInt();

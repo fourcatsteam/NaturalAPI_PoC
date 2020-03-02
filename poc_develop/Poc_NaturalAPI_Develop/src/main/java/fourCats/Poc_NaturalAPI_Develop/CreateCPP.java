@@ -60,6 +60,7 @@ public class CreateCPP {
 						par += ",";
 					}
 				}
+				par = par.replaceAll("null", "string");
 				
 				if(isConst == 1) {
 					if(choice == 1) {
