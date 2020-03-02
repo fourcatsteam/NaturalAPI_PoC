@@ -39,7 +39,7 @@ public class Parameter{
         return type;
     }
     
-    public void setRequired(Boolean isParamRequired) {
+    public void setRequired(boolean isParamRequired) {
         this.required = isParamRequired;
     }
     

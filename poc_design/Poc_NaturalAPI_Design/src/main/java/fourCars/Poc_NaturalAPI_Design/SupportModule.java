@@ -279,8 +279,8 @@ public class SupportModule {
        System.out.println("2. Update return type");
        System.out.println("3. Abort update");
        input = reader.readLine();
-       switch(input) {
-           case "1":{
+       switch(Integer.parseInt(input)) {
+           case 1:{
                System.out.println("-----------------------------------------ADD PARAMETER TO: '" + operationToUpdate.toString() + "'-----------------------------------------");
                Parameter paramToAdd = new Parameter();
                System.out.println("Insert parameter name");
@@ -293,13 +293,21 @@ public class SupportModule {
                        paramToAdd.setType(input);
                    }
                    System.out.println("Is this parameter required? 1. TRUE, 2. FALSE");
-                   Boolean required = null;
+                   boolean required = true;
                    input = reader.readLine();
-                   switch(input) {
-                       case "1": required = true;
-                       case "2": required = false;
-                       default:
-                           required = null;
+                   switch(Integer.parseInt(input)) {
+                       case 1:{ 
+                           required = true;
+                           break;
+                           }
+                       case 2:{
+                           required = false;
+                           break;
+                       }
+                       default:{
+                           required = true;
+                           break;
+                       }   
                    }
                    paramToAdd.setRequired(required);
                    operationToUpdate.addParameter(paramToAdd);
@@ -310,10 +318,10 @@ public class SupportModule {
                }
                break;
            }
-           case "2":{
+           case 2:{
                System.out.println("-----------------------------------------UPDATE RETURN TYPE FOR: '" + operationToUpdate.toString() + "'-----------------------------------------");
                System.out.println("Insert the new return type for the operation");
-               input = reader.readLine();
+               input= reader.readLine();
                if (!input.equals("")) {
                    operationToUpdate.setType(input);
                    System.out.println("Done! This is your updated opearation: '" + operationToUpdate.toString() + "'");
@@ -323,7 +331,7 @@ public class SupportModule {
                }
                break;
            }
-           case "3":{
+           case 3:{
                System.out.println("Abort. No changes have been made.");
                break;
            }
