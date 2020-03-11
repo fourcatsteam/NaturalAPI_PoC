@@ -41,10 +41,15 @@ public class CreateJava {
 
 				if(choice == 1) {
 					File file = new File("./java_classes/" + className +"Interface.java");
-					FileWriter fileWriter = new FileWriter(file);
-					fileWriter.write("public interface " + className + "Interface{\n\n");
-					fileWriter.write("	public " + method.getValue() + " "+ method.getKey() + "(" + par + ");\n}");
-					fileWriter.close();
+					//if(!file.exists()) {	
+						FileWriter fileWriter = new FileWriter(file);
+						fileWriter.write("public interface " + className + "Interface{\n\n");
+						fileWriter.write("	public " + method.getValue() + " "+ method.getKey() + "(" + par + ");\n}");
+						fileWriter.close();
+					//}
+					//else {
+					//	System.out.println("file already exists");
+					//}
 				}
 				else if(choice == 2) {
 					File file = new File("./java_classes/" + className +".java");
