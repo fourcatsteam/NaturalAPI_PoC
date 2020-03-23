@@ -1,0 +1,1 @@
+Ciao io sono Simone e sto provando a creare codice seguendo la Clean Architecture!
