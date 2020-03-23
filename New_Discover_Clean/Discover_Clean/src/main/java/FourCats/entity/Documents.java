@@ -16,4 +16,13 @@ public class Documents {
     public void add(Document d){
         list.add(d);
     }
+
+    public String print(){
+        String res="";
+        for(Document d: list){
+            res = res + d.getContent();
+            res = res + "\n";
+        }
+        return res;
+    }
 }

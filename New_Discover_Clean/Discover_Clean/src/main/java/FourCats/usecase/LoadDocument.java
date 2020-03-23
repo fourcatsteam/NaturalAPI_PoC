@@ -2,27 +2,34 @@ package FourCats.usecase;
 
 import FourCats.entity.Document;
 import FourCats.entity.Documents;
-import FourCats.interfaceAccess.RepositoryAccess;
-import com.sun.org.omg.CORBA.Repository;
+import FourCats.interfaceAccess.DirectoryAccess;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 
 /* Use case Interactor per il caricamento dei documenti dalla repository  */
 public class LoadDocument{
 
-   private Documents list;
-   private RepositoryAccess ra;
+    //Questo use case contine un riferimento alla lista dei documenti caricati dall'utente
+    //e un riferimento all'interfaccia DirectoryAccess, per il metodo read
+    private Documents list;
+    private DirectoryAccess da;
 
-    public LoadDocument(RepositoryAccess r){
+    public LoadDocument(DirectoryAccess r){
         list = new Documents();
-        ra = r;
+        da = r;
     }
 
-    public void loadDocs(){
-        ra.read();
+    //Questa funzione richiama il metodo read() di DirectoryAccess
+    //E per ogni Document da lui creato, viene aggiunto alla lista
+    public void loadDocs() throws FileNotFoundException {
+        for (Document dc:da.read()) {
+            list.add(dc);
+        };
+    }
+
+    //Semplice stampa dei contenuto dei vari documenti CARICATI
+    public String readDocument(){
+        return list.print();
     }
 
 
