@@ -1,6 +1,10 @@
 package FourCats;
 
+import FourCats.entity.Bdl;
 import FourCats.interfaceFrameworks.DirectoryAccessBoundary;
+import FourCats.interfaceFrameworks.ParserAccessBoundary;
+import FourCats.usecase.BdlGenerator;
+import FourCats.usecase.DocumentParser;
 import FourCats.usecase.LoadDocument;
 
 import java.io.IOException;
@@ -27,6 +31,13 @@ public class App
         ld.loadDocs();
 
         System.out.println(ld.readDocument());
+
+
+        ParserAccessBoundary pab = new ParserAccessBoundary();
+        DocumentParser dp = new DocumentParser(pab);
+        BdlGenerator gen = new BdlGenerator(ld.getList(),dp);
+        Bdl createdBdl = gen.generateBDL();
+        gen.saveBdlToFile("provaBdl");
 
 
 

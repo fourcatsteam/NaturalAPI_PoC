@@ -32,5 +32,9 @@ public class LoadDocument{
         return list.print();
     }
 
+    public Documents getList(){
+        return list;
+    }
+
 
 }

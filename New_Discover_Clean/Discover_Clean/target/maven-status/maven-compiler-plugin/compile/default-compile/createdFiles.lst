@@ -1,0 +1,11 @@
+FourCats\entity\Documents.class
+FourCats\interfaceAccess\DirectoryAccess.class
+FourCats\usecase\BdlGenerator.class
+FourCats\interfaceFrameworks\ParserAccessBoundary.class
+FourCats\App.class
+FourCats\entity\Document.class
+FourCats\interfaceFrameworks\DirectoryAccessBoundary.class
+FourCats\usecase\LoadDocument.class
+FourCats\interfaceAccess\ParserAccess.class
+FourCats\entity\Bdl.class
+FourCats\usecase\DocumentParser.class
