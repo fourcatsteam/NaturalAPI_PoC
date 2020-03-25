@@ -32,12 +32,19 @@ public class App
 
         System.out.println(ld.readDocument());
 
-
+        //Creazione dell'oggetto ParserAccessBoundary per interfacciarsi con lo Stanford Parser
         ParserAccessBoundary pab = new ParserAccessBoundary();
+        //Creazione del DocumentParser per il richiamo delle funzioni dello Stanford Parser
         DocumentParser dp = new DocumentParser(pab);
-        BdlGenerator gen = new BdlGenerator(ld.getList(),dp);
-        Bdl createdBdl = gen.generateBDL();
-        gen.saveBdlToFile("provaBdl");
+        //Creazione del BdlGenerator che genera la bdl, i due parametri sono il DocumentParser e la LoadDocument per
+        //Ottenere i documenti da trasformare in bdl
+        BdlGenerator gen = new BdlGenerator(dp,ld);
+
+        //Il parametro è il nome della bdl
+        Bdl createdBdl = gen.generateBDL("project");
+
+        System.out.println(createdBdl.toString());
+
 
 
 

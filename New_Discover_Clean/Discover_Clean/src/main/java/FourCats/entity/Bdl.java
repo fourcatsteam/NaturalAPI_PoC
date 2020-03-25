@@ -78,4 +78,23 @@ public class Bdl {
         Collections.sort(predicates, Collections.reverseOrder());
     }
 
+    @Override
+    public String toString() {
+
+        String ret="-- NOUNS -- \n";
+
+        for(WordCounter w: nouns){
+            ret = ret + w.toString() +"\n";
+        }
+        ret = ret + "-- VERBS -- \n";
+        for(WordCounter w: verbs){
+            ret = ret + w.toString() +"\n";
+        }
+        ret = ret + "-- PREDICATES -- \n";
+        for(WordCounter w: predicates){
+            ret = ret + w.toString() +"\n";
+        }
+
+        return ret;
+    }
 }

@@ -7,4 +7,5 @@ import java.util.LinkedList;
 public interface DirectoryAccess {
     public LinkedList<Document> read() throws FileNotFoundException;
 
+
 }

@@ -25,4 +25,9 @@ public class WordCounter implements Comparable<WordCounter>{
         if(count==w.count) return 0;
         return 1;
     }
+
+    @Override
+    public String toString() {
+        return "["+word+","+count+"]";
+    }
 }

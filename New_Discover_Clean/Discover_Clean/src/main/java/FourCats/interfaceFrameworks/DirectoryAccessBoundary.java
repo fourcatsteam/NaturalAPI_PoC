@@ -41,6 +41,9 @@ public class DirectoryAccessBoundary implements DirectoryAccess {
         }
         return ls;
     }
+
+
+
     //Creazione del documento da un titolo e il contenuto
     public Document makeDocument(String title,String cont) {
         return new Document(title,"me",2020,cont,"ita");

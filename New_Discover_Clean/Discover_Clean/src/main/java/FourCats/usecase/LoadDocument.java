@@ -5,6 +5,7 @@ import FourCats.entity.Documents;
 import FourCats.interfaceAccess.DirectoryAccess;
 
 import java.io.FileNotFoundException;
+import java.util.LinkedList;
 
 /* Use case Interactor per il caricamento dei documenti dalla repository  */
 public class LoadDocument{
@@ -32,8 +33,12 @@ public class LoadDocument{
         return list.print();
     }
 
-    public Documents getList(){
+    public Documents getDocuments(){
         return list;
+    }
+
+    public LinkedList<Document> getList(){
+        return list.getList();
     }
 
 
